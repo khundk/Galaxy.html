@@ -117,13 +117,45 @@ For the site to work end-to-end, create these collections (names can vary — ju
 
 ## Preview Locally
 
-Open `ysa-homepage.html` in any browser to preview the design before pasting into Shopify.
+### Easiest: open the file directly (no server)
+
+Double-click or drag into your browser:
+
+`shopify/ysa-homepage.html`
+
+### Option B: use the preview script
+
+From the project root:
 
 ```bash
-# If you have Python installed:
-python3 -m http.server 8080 --directory shopify
-# Then visit http://localhost:8080/ysa-homepage.html
+./preview.sh
 ```
+
+Then open **http://localhost:8080/** in your browser.
+
+### Option C: manual server
+
+**Important:** run the server from inside the `shopify` folder, not the project root.
+
+```bash
+cd shopify
+python3 -m http.server 8080
+```
+
+Then open:
+- **http://localhost:8080/** (homepage)
+- **http://localhost:8080/ysa-homepage.html**
+
+If you started the server from the project root instead, use:
+- **http://localhost:8080/shopify/ysa-homepage.html**
+
+### Troubleshooting 404
+
+| Problem | Fix |
+|---------|-----|
+| `File not found` | Server is in the wrong folder — use `./preview.sh` or `cd shopify` first |
+| Page won't load at all | No server running — start one with `./preview.sh` |
+| `localhost` doesn't work in Cursor Cloud | Open `shopify/ysa-homepage.html` directly in your local browser after downloading/cloning the repo |
 
 ---
 
