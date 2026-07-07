@@ -40,8 +40,14 @@ export const api = {
   connectDemoShop: (merchantId: string, shopDomain: string) =>
     request('/shopify/shops/demo', { method: 'POST', body: JSON.stringify({ merchantId, shopDomain }) }),
 
-  getOrders: (merchantId: string) =>
-    request<{ orders: FulfillmentOrder[] }>(`/orders?merchantId=${merchantId}`),
+  getOrders: (merchantId: string, params?: { status?: string; search?: string }) => {
+    const qs = new URLSearchParams({ merchantId });
+    if (params?.status) qs.set('status', params.status);
+    if (params?.search) qs.set('search', params.search);
+    return request<{ orders: FulfillmentOrder[]; statusCounts: Record<string, number>; total: number }>(
+      `/orders?${qs}`
+    );
+  },
   getOrder: (id: string) => request<{ order: FulfillmentOrder }>(`/orders/${id}`),
   createOrder: (data: CreateOrderPayload) =>
     request<{ order: FulfillmentOrder }>('/orders', { method: 'POST', body: JSON.stringify(data) }),
@@ -153,6 +159,7 @@ export interface FulfillmentOrder {
   carrier?: string;
   shippingMethod?: string;
   createdAt: string;
+  shop?: ShopifyShop;
   items?: OrderItem[];
   shipments?: Shipment[];
   statusHistory?: StatusHistory[];

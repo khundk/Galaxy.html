@@ -44,4 +44,50 @@ body {
 .badge-shipped { @apply bg-indigo-500/20 text-indigo-300; }
 .badge-delivered { @apply bg-emerald-500/20 text-emerald-300; }
 .badge-cancelled { @apply bg-red-500/20 text-red-300; }
-.badge-failed { @apply bg-red-500/20 text-red-300; }
+.main-content {
+  @apply flex-1 overflow-auto bg-slate-950;
+}
+
+.admin-page {
+  @apply p-6 max-w-[1600px] mx-auto;
+}
+
+.admin-table-wrap {
+  @apply bg-slate-900 border border-slate-800 rounded-xl overflow-hidden;
+}
+
+.admin-table {
+  @apply w-full text-sm;
+}
+
+.admin-table thead {
+  @apply bg-slate-800/60 text-slate-400 text-xs uppercase tracking-wide;
+}
+
+.admin-table th {
+  @apply px-4 py-3 text-left font-medium whitespace-nowrap;
+}
+
+.admin-table td {
+  @apply px-4 py-3 border-t border-slate-800/80 align-middle;
+}
+
+.admin-table tbody tr {
+  @apply hover:bg-slate-800/40 transition-colors;
+}
+
+.status-tab {
+  @apply px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors;
+}
+
+.status-tab-active {
+  @apply bg-brand-600 text-white;
+}
+
+.status-tab-inactive {
+  @apply text-slate-400 hover:text-slate-200 hover:bg-slate-800;
+}
+
+.stat-pill {
+  @apply bg-slate-900 border border-slate-800 rounded-xl px-5 py-4;
+}

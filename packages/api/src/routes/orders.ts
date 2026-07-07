@@ -18,16 +18,47 @@ orderRoutes.get(
   '/',
   asyncHandler(async (req, res) => {
     const merchantId = String(req.query.merchantId || '');
+    const status = String(req.query.status || '');
+    const search = String(req.query.search || '').toLowerCase();
+
     const orders = await prisma.fulfillmentOrder.findMany({
-      where: merchantId ? { merchantId } : undefined,
+      where: {
+        ...(merchantId ? { merchantId } : {}),
+        ...(status && status !== 'all' ? { status } : {}),
+      },
       include: {
         items: { include: { product: true } },
         shipments: true,
-        statusHistory: { orderBy: { createdAt: 'desc' }, take: 5 },
+        shop: true,
+        statusHistory: { orderBy: { createdAt: 'desc' }, take: 1 },
       },
       orderBy: { createdAt: 'desc' },
     });
-    res.json({ orders });
+
+    const filtered = search
+      ? orders.filter((o) => {
+          const addr = o.shippingAddress.toLowerCase();
+          return (
+            o.shopifyOrderNum?.toLowerCase().includes(search) ||
+            o.customerName.toLowerCase().includes(search) ||
+            o.warehouseRef?.toLowerCase().includes(search) ||
+            o.trackingNumber?.toLowerCase().includes(search) ||
+            o.inboundTracking?.toLowerCase().includes(search) ||
+            addr.includes(search)
+          );
+        })
+      : orders;
+
+    const statusCounts = orders.reduce(
+      (acc, o) => {
+        acc.all = (acc.all || 0) + 1;
+        acc[o.status] = (acc[o.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
+    res.json({ orders: filtered, statusCounts, total: orders.length });
   })
 );
 

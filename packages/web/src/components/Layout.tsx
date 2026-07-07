@@ -16,12 +16,12 @@ const nav = [
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children, wide }: { children: React.ReactNode; wide?: boolean }) {
   const location = useLocation();
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col">
+      <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0">
         <div className="p-6 border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center">
@@ -57,8 +57,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <p className="text-xs text-slate-600 mt-1">Warehousing · QC · Global Shipping</p>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto">
-        <div className="p-8 max-w-7xl mx-auto">{children}</div>
+      <main className="main-content">
+        {wide ? children : <div className="p-8 max-w-7xl mx-auto">{children}</div>}
       </main>
     </div>
   );
