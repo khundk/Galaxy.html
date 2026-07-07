@@ -33,7 +33,7 @@ export default function ShippingPage() {
         </h3>
         <div className="flex gap-4 items-end">
           <div>
-            <label className="text-sm text-slate-400 block mb-1">Weight (kg)</label>
+            <label className="text-sm text-muted block mb-1">Weight (kg)</label>
             <input
               type="number"
               className="input w-32"
@@ -44,7 +44,7 @@ export default function ShippingPage() {
             />
           </div>
           <div>
-            <label className="text-sm text-slate-400 block mb-1">Destination</label>
+            <label className="text-sm text-muted block mb-1">Destination</label>
             <select className="input w-40" value={country} onChange={(e) => setCountry(e.target.value)}>
               <option value="US">United States</option>
               <option value="UK">United Kingdom</option>
@@ -61,16 +61,16 @@ export default function ShippingPage() {
         {quotes.length > 0 && (
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             {quotes.map((q) => (
-              <div key={q.routeId} className="p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+              <div key={q.routeId} className="p-4 rounded-lg vintage-inset border border-[var(--color-sepia-dark)]">
                 <div className="flex justify-between">
                   <div>
                     <p className="font-medium">{q.name}</p>
-                    <p className="text-xs text-slate-500">{q.carrier} · {q.minDays}-{q.maxDays} business days</p>
+                    <p className="text-xs text-faint">{q.carrier} · {q.minDays}-{q.maxDays} business days</p>
                   </div>
-                  <p className="text-lg font-bold text-brand-400">${q.cost.toFixed(2)}</p>
+                  <p className="text-lg font-bold text-burgundy">${q.cost.toFixed(2)}</p>
                 </div>
                 {q.includesCustoms && (
-                  <span className="text-xs text-emerald-400 mt-2 inline-block">DDP — duties & taxes included</span>
+                  <span className="text-xs text-success mt-2 inline-block">DDP — duties & taxes included</span>
                 )}
               </div>
             ))}
@@ -83,21 +83,21 @@ export default function ShippingPage() {
           <Globe className="w-5 h-5" /> How Shipping Works
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-          <div className="p-4 rounded-lg bg-slate-800/30">
-            <p className="font-medium text-brand-300 mb-1">1. Consolidation</p>
-            <p className="text-slate-400">Items from Taobao arrive at our Guangzhou warehouse and are consolidated per order.</p>
+          <div className="p-4 rounded-lg vintage-inset">
+            <p className="font-medium text-burgundy mb-1">1. Consolidation</p>
+            <p className="text-muted">Items from Taobao arrive at our Guangzhou warehouse and are consolidated per order.</p>
           </div>
-          <div className="p-4 rounded-lg bg-slate-800/30">
-            <p className="font-medium text-brand-300 mb-1">2. Quality Check</p>
-            <p className="text-slate-400">Every item is inspected. Defects are flagged before packing.</p>
+          <div className="p-4 rounded-lg vintage-inset">
+            <p className="font-medium text-burgundy mb-1">2. Quality Check</p>
+            <p className="text-muted">Every item is inspected. Defects are flagged before packing.</p>
           </div>
-          <div className="p-4 rounded-lg bg-slate-800/30">
-            <p className="font-medium text-brand-300 mb-1">3. Repackaging</p>
-            <p className="text-slate-400">Items are repacked with your branding. Original Taobao packaging is removed (blind shipping).</p>
+          <div className="p-4 rounded-lg vintage-inset">
+            <p className="font-medium text-burgundy mb-1">3. Repackaging</p>
+            <p className="text-muted">Items are repacked with your branding. Original Taobao packaging is removed (blind shipping).</p>
           </div>
-          <div className="p-4 rounded-lg bg-slate-800/30">
-            <p className="font-medium text-brand-300 mb-1">4. International Ship</p>
-            <p className="text-slate-400">We ship via YunExpress, 4PX, CNE, or China Post with full tracking.</p>
+          <div className="p-4 rounded-lg vintage-inset">
+            <p className="font-medium text-burgundy mb-1">4. International Ship</p>
+            <p className="text-muted">We ship via YunExpress, 4PX, CNE, or China Post with full tracking.</p>
           </div>
         </div>
       </div>
@@ -106,11 +106,11 @@ export default function ShippingPage() {
         <h3 className="font-semibold mb-4">Available Routes by Zone</h3>
         {zones.map((zone) => (
           <div key={zone} className="mb-4">
-            <h4 className="text-sm font-medium text-brand-400 mb-2">{zone}</h4>
+            <h4 className="text-sm font-medium text-burgundy mb-2">{zone}</h4>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-slate-500 border-b border-slate-800">
+                  <tr className="text-faint border-b border-[var(--color-sepia)]">
                     <th className="text-left py-2">Route</th>
                     <th className="text-left py-2">Carrier</th>
                     <th className="text-left py-2">Delivery</th>
@@ -121,10 +121,10 @@ export default function ShippingPage() {
                 </thead>
                 <tbody>
                   {routes.filter((r) => r.destinationZone === zone).map((r) => (
-                    <tr key={r.id} className="border-b border-slate-800/50">
+                    <tr key={r.id} className="border-b border-[var(--color-sepia)]/50">
                       <td className="py-2">{r.name}</td>
-                      <td className="py-2 text-slate-400">{r.carrier}</td>
-                      <td className="py-2 text-slate-400">{r.minDays}-{r.maxDays} days</td>
+                      <td className="py-2 text-muted">{r.carrier}</td>
+                      <td className="py-2 text-muted">{r.minDays}-{r.maxDays} days</td>
                       <td className="py-2">${r.baseRate}</td>
                       <td className="py-2">${r.perKgRate}/kg</td>
                       <td className="py-2">{r.includesCustoms ? 'DDP' : 'DDU'}</td>

@@ -5,7 +5,7 @@ import {
   ShoppingCart,
   Truck,
   Settings,
-  Boxes,
+  Anchor,
 } from 'lucide-react';
 
 const nav = [
@@ -21,30 +21,39 @@ export function Layout({ children, wide }: { children: React.ReactNode; wide?: b
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0">
-        <div className="p-6 border-b border-slate-800">
+      <aside className="sidebar">
+        <div className="sidebar-brand">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center">
-              <Boxes className="w-5 h-5 text-white" />
+            <div
+              className="w-11 h-11 flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #8b3a3a 0%, #6b2c2c 100%)',
+                border: '2px solid #c9a227',
+                borderRadius: '50%',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              }}
+            >
+              <Anchor className="w-5 h-5" style={{ color: '#f0e6d3' }} />
             </div>
             <div>
-              <h1 className="font-bold text-lg">SuperBridge</h1>
-              <p className="text-xs text-slate-400">Taobao → Shopify</p>
+              <h1 className="font-display font-bold text-xl" style={{ color: '#f0e6d3', letterSpacing: '0.06em' }}>
+                SuperBridge
+              </h1>
+              <p className="text-xs font-mono" style={{ color: '#9a8472', letterSpacing: '0.12em' }}>
+                EST. 2026 · TRADE CO.
+              </p>
             </div>
           </div>
         </div>
+
         <nav className="flex-1 p-4 space-y-1">
           {nav.map(({ to, icon: Icon, label }) => {
-            const active = location.pathname === to;
+            const active = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
             return (
               <Link
                 key={to}
                 to={to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  active
-                    ? 'bg-brand-600/20 text-brand-100'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-                }`}
+                className={`sidebar-nav-link ${active ? 'sidebar-nav-link-active' : ''}`}
               >
                 <Icon className="w-5 h-5" />
                 {label}
@@ -52,11 +61,17 @@ export function Layout({ children, wide }: { children: React.ReactNode; wide?: b
             );
           })}
         </nav>
-        <div className="p-4 border-t border-slate-800">
-          <p className="text-xs text-slate-500">Your BuckyDrop alternative</p>
-          <p className="text-xs text-slate-600 mt-1">Warehousing · QC · Global Shipping</p>
+
+        <div className="p-4" style={{ borderTop: '1px solid rgba(201,162,39,0.2)' }}>
+          <p className="font-mono text-xs" style={{ color: '#9a8472', letterSpacing: '0.08em' }}>
+            TAOBAO → SHOPIFY
+          </p>
+          <p className="font-display text-xs italic mt-1" style={{ color: '#6b5344' }}>
+            Warehousing · QC · Global Shipping
+          </p>
         </div>
       </aside>
+
       <main className="main-content">
         {wide ? children : <div className="p-8 max-w-7xl mx-auto">{children}</div>}
       </main>
@@ -65,16 +80,16 @@ export function Layout({ children, wide }: { children: React.ReactNode; wide?: b
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const cls = `badge badge-${status}`;
-  return <span className={cls}>{status.replace('_', ' ')}</span>;
+  return <span className={`badge badge-${status}`}>{status.replace(/_/g, ' ')}</span>;
 }
 
 export function PageHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between mb-8">
       <div>
-        <h2 className="text-2xl font-bold">{title}</h2>
-        {subtitle && <p className="text-slate-400 mt-1">{subtitle}</p>}
+        <h2 className="font-display text-3xl font-bold text-ink" style={{ letterSpacing: '0.02em' }}>{title}</h2>
+        {subtitle && <p className="text-muted mt-1 italic">{subtitle}</p>}
+        <div className="ornament mt-3 max-w-xs">✦</div>
       </div>
       {action}
     </div>

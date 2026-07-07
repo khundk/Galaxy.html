@@ -19,16 +19,16 @@ export default function Dashboard() {
   if (!merchant || !stats) {
     return (
       <Layout>
-        <div className="text-slate-400">Loading dashboard...</div>
+        <div className="text-muted">Loading dashboard...</div>
       </Layout>
     );
   }
 
   const statCards = [
-    { label: 'Products Sourced', value: stats.totalProducts, icon: Package, color: 'text-brand-400' },
-    { label: 'Total Orders', value: stats.totalOrders, icon: ShoppingCart, color: 'text-cyan-400' },
-    { label: 'Wallet Balance', value: `$${stats.walletBalance.toFixed(2)}`, icon: Wallet, color: 'text-emerald-400' },
-    { label: 'Total Spent', value: `$${stats.totalSpent.toFixed(2)}`, icon: TrendingUp, color: 'text-amber-400' },
+    { label: 'Products Sourced', value: stats.totalProducts, icon: Package, color: 'text-burgundy' },
+    { label: 'Total Orders', value: stats.totalOrders, icon: ShoppingCart, color: 'text-warning' },
+    { label: 'Wallet Balance', value: `$${stats.walletBalance.toFixed(2)}`, icon: Wallet, color: 'text-success' },
+    { label: 'Total Spent', value: `$${stats.totalSpent.toFixed(2)}`, icon: TrendingUp, color: 'text-warning' },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function Dashboard() {
           <div key={s.label} className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">{s.label}</p>
+                <p className="text-sm text-muted">{s.label}</p>
                 <p className="text-2xl font-bold mt-1">{s.value}</p>
               </div>
               <s.icon className={`w-8 h-8 ${s.color} opacity-60`} />
@@ -59,9 +59,9 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
-          <h3 className="font-semibold mb-4">Order Pipeline</h3>
+          <h3 className="font-display font-semibold text-lg mb-4">Order Pipeline</h3>
           {Object.keys(stats.ordersByStatus).length === 0 ? (
-            <p className="text-slate-500 text-sm">No orders yet. Connect Shopify or create a test order.</p>
+            <p className="text-faint text-sm">No orders yet. Connect Shopify or create a test order.</p>
           ) : (
             <div className="space-y-3">
               {Object.entries(stats.ordersByStatus).map(([status, count]) => (
@@ -77,21 +77,21 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold">Recent Orders</h3>
-            <Link to="/orders" className="text-sm text-brand-400 hover:text-brand-300">View all</Link>
+            <Link to="/orders" className="text-sm text-burgundy hover:text-burgundy">View all</Link>
           </div>
           {recentOrders.length === 0 ? (
-            <p className="text-slate-500 text-sm">No orders yet.</p>
+            <p className="text-faint text-sm">No orders yet.</p>
           ) : (
             <div className="space-y-3">
               {recentOrders.map((o) => (
                 <Link
                   key={o.id}
                   to={`/orders/${o.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg vintage-inset hover:vintage-inset transition-colors"
                 >
                   <div>
                     <p className="text-sm font-medium">{o.shopifyOrderNum || o.customerName}</p>
-                    <p className="text-xs text-slate-500">{new Date(o.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-faint">{new Date(o.createdAt).toLocaleDateString()}</p>
                   </div>
                   <StatusBadge status={o.status} />
                 </Link>
@@ -102,7 +102,7 @@ export default function Dashboard() {
       </div>
 
       <div className="card mt-6">
-        <h3 className="font-semibold mb-3">How SuperBridge Works</h3>
+        <h3 className="font-display font-semibold text-lg mb-3">How SuperBridge Works</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 text-center text-sm">
           {[
             { step: '1', title: 'Import', desc: 'Source from Taobao' },
@@ -111,12 +111,15 @@ export default function Dashboard() {
             { step: '4', title: 'Fulfill', desc: 'QC & pack at warehouse' },
             { step: '5', title: 'Ship', desc: 'Global delivery' },
           ].map((s) => (
-            <div key={s.step} className="p-4 rounded-lg bg-slate-800/30">
-              <div className="w-8 h-8 rounded-full bg-brand-600/30 text-brand-300 flex items-center justify-center mx-auto mb-2 font-bold text-sm">
+            <div key={s.step} className="p-4 vintage-inset text-center">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2 font-display font-bold text-sm text-[#faf5eb]"
+                style={{ background: 'linear-gradient(135deg, #8b3a3a, #6b2c2c)', border: '1px solid #c9a227' }}
+              >
                 {s.step}
               </div>
-              <p className="font-medium">{s.title}</p>
-              <p className="text-slate-500 text-xs mt-1">{s.desc}</p>
+              <p className="font-display font-semibold">{s.title}</p>
+              <p className="text-faint text-xs mt-1 italic">{s.desc}</p>
             </div>
           ))}
         </div>

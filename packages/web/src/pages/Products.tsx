@@ -79,7 +79,7 @@ export default function Products() {
             onChange={(e) => setImportUrl(e.target.value)}
           />
           <div className="flex items-center gap-2">
-            <label className="text-sm text-slate-400 whitespace-nowrap">Markup %</label>
+            <label className="text-sm text-muted whitespace-nowrap">Markup %</label>
             <input
               type="number"
               className="input w-20"
@@ -115,13 +115,13 @@ export default function Products() {
 
       <div className="flex gap-2 mb-4">
         <button
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${tab === 'imported' ? 'bg-brand-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+          className={`status-tab ${tab === 'imported' ? 'status-tab-active' : 'status-tab-inactive'}`}
           onClick={() => setTab('imported')}
         >
           My Products ({products.length})
         </button>
         <button
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${tab === 'catalog' ? 'bg-brand-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+          className={`status-tab ${tab === 'catalog' ? 'status-tab-active' : 'status-tab-inactive'}`}
           onClick={() => setTab('catalog')}
         >
           Search Results ({searchResults.length})
@@ -137,9 +137,9 @@ export default function Products() {
               <div key={p.itemId} className="card !p-4">
                 <img src={images[0]} alt={p.title} className="w-full h-40 object-cover rounded-lg mb-3" />
                 <h4 className="font-medium text-sm line-clamp-2">{p.title}</h4>
-                <p className="text-xs text-slate-500 mt-1">{p.supplierName} · {p.category}</p>
+                <p className="text-xs text-faint mt-1">{p.supplierName} · {p.category}</p>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-brand-400 font-semibold">${minPrice.toFixed(2)}</span>
+                  <span className="text-burgundy font-semibold">${minPrice.toFixed(2)}</span>
                   <button
                     className="btn-primary text-xs !px-3 !py-1.5"
                     onClick={() => handleImport(p.url)}
@@ -158,8 +158,8 @@ export default function Products() {
         <div className="space-y-3">
           {products.length === 0 ? (
             <div className="card text-center py-12">
-              <Package className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400">No products imported yet. Search or paste a Taobao URL above.</p>
+              <Package className="w-12 h-12 text-faint mx-auto mb-3" />
+              <p className="text-muted">No products imported yet. Search or paste a Taobao URL above.</p>
             </div>
           ) : (
             products.map((p) => {
@@ -170,7 +170,7 @@ export default function Products() {
                   <img src={images[0]} alt={p.title} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium truncate">{p.title}</h4>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-faint">
                       Cost: ${p.supplierPrice.toFixed(2)} → Sell: ${selling.toFixed(2)} ({p.markupPercent}% markup)
                     </p>
                   </div>
@@ -184,7 +184,7 @@ export default function Products() {
                         <Upload className="w-4 h-4" /> Sync to Shopify
                       </button>
                     ) : (
-                      <span className="text-xs text-emerald-400 font-medium px-3 py-2">Synced ✓</span>
+                      <span className="text-xs text-success font-medium px-3 py-2">Synced ✓</span>
                     )}
                   </div>
                 </div>

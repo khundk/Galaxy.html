@@ -74,7 +74,7 @@ export default function Settings() {
     setTimeout(() => setSaved(''), 3000);
   };
 
-  if (!merchant) return <Layout><div className="text-slate-400">Loading...</div></Layout>;
+  if (!merchant) return <Layout><div className="text-muted">Loading...</div></Layout>;
 
   return (
     <Layout>
@@ -84,14 +84,14 @@ export default function Settings() {
       />
 
       {shopifyConnected && (
-        <div className="card mb-6 border-emerald-500/30 bg-emerald-500/10 flex items-center gap-3">
-          <CheckCircle className="w-5 h-5 text-emerald-400" />
-          <p className="text-emerald-300">Shopify store connected successfully!</p>
+        <div className="card mb-6 flex items-center gap-3" style={{ borderColor: '#7ab47a', background: 'rgba(42,80,40,0.08)' }}>
+          <CheckCircle className="w-5 h-5 text-success" />
+          <p className="text-success">Shopify store connected successfully!</p>
         </div>
       )}
 
       {saved && (
-        <div className="card mb-6 border-emerald-500/30 bg-emerald-500/10 text-emerald-300">{saved}</div>
+        <div className="card mb-6 text-success" style={{ borderColor: '#7ab47a', background: 'rgba(42,80,40,0.08)' }}>{saved}</div>
       )}
 
       {/* Warehouse — critical for automation */}
@@ -99,7 +99,7 @@ export default function Settings() {
         <h3 className="font-semibold mb-2 flex items-center gap-2">
           <Warehouse className="w-5 h-5" /> Superbly Warehouse Address
         </h3>
-        <p className="text-sm text-slate-400 mb-4">
+        <p className="text-sm text-muted mb-4">
           Taobao orders ship HERE (not to your customer). When packages arrive, SuperBridge auto-creates
           outbound labels using the customer address from Shopify — you never type it manually.
         </p>
@@ -121,7 +121,7 @@ export default function Settings() {
         <h3 className="font-semibold mb-2 flex items-center gap-2">
           <Zap className="w-5 h-5" /> Automation
         </h3>
-        <p className="text-sm text-slate-400 mb-4">
+        <p className="text-sm text-muted mb-4">
           When a customer buys on Shopify: auto-buy on Taobao → ship to Superbly → auto-ship to customer.
         </p>
         <div className="space-y-3">
@@ -134,7 +134,7 @@ export default function Settings() {
             Auto-create shipping label when package arrives at Superbly (no manual address entry)
           </label>
           <div>
-            <label className="text-sm text-slate-400 block mb-1">Outbound carrier</label>
+            <label className="text-sm text-muted block mb-1">Outbound carrier</label>
             <select className="input w-48" value={automation.outboundCarrier || 'demo'} onChange={(e) => setAutomation({ ...automation, outboundCarrier: e.target.value as AutomationSettings['outboundCarrier'] })}>
               <option value="demo">Demo (testing)</option>
               <option value="shipstation">ShipStation (production)</option>
@@ -163,17 +163,17 @@ export default function Settings() {
           {shops.length > 0 ? (
             <div className="space-y-3">
               {shops.map((s) => (
-                <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
+                <div key={s.id} className="flex items-center justify-between p-3 rounded-lg vintage-inset">
                   <div>
                     <p className="font-medium">{s.shopDomain}</p>
-                    <p className="text-xs text-slate-500">{s.isConnected ? 'Connected' : 'Disconnected'}</p>
+                    <p className="text-xs text-faint">{s.isConnected ? 'Connected' : 'Disconnected'}</p>
                   </div>
-                  {s.isConnected && <CheckCircle className="w-5 h-5 text-emerald-400" />}
+                  {s.isConnected && <CheckCircle className="w-5 h-5 text-success" />}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-slate-400 text-sm mb-4">No Shopify store connected yet.</p>
+            <p className="text-muted text-sm mb-4">No Shopify store connected yet.</p>
           )}
 
           <div className="mt-4 space-y-3">
@@ -189,8 +189,8 @@ export default function Settings() {
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Wallet className="w-5 h-5" /> Wallet
           </h3>
-          <p className="text-3xl font-bold text-emerald-400 mb-1">${merchant.walletBalance.toFixed(2)}</p>
-          <p className="text-sm text-slate-400 mb-4">Auto-deducted when outbound labels are created.</p>
+          <p className="text-3xl font-bold text-success mb-1">${merchant.walletBalance.toFixed(2)}</p>
+          <p className="text-sm text-muted mb-4">Auto-deducted when outbound labels are created.</p>
           <div className="flex gap-3">
             <input type="number" className="input" value={depositAmount} onChange={(e) => setDepositAmount(Number(e.target.value))} min={1} />
             <button className="btn-primary" onClick={handleDeposit}>Top Up</button>

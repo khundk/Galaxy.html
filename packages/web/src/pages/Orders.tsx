@@ -125,8 +125,8 @@ export default function Orders() {
         {/* Header — BuckyDrop style */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold">Orders</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="font-display text-3xl font-bold text-ink">Orders</h1>
+            <p className="text-muted text-sm mt-1 italic">
               Track procurement, warehouse receiving, QC, and shipping — synced from Shopify
             </p>
           </div>
@@ -143,12 +143,12 @@ export default function Orders() {
         {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="stat-pill">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">Total Orders</p>
+            <p className="text-xs text-faint uppercase tracking-wide">Total Orders</p>
             <p className="text-2xl font-bold mt-1">{statusCounts.all || 0}</p>
           </div>
           <div className="stat-pill">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">Processing</p>
-            <p className="text-2xl font-bold mt-1 text-amber-400">
+            <p className="text-xs text-faint uppercase tracking-wide">Processing</p>
+            <p className="font-display text-2xl font-bold mt-1 text-warning">
               {(statusCounts.pending || 0) +
                 (statusCounts.taobao_ordered || 0) +
                 (statusCounts.inbound_transit || 0) +
@@ -156,12 +156,12 @@ export default function Orders() {
             </p>
           </div>
           <div className="stat-pill">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">Shipped</p>
-            <p className="text-2xl font-bold mt-1 text-indigo-400">{statusCounts.shipped || 0}</p>
+            <p className="text-xs text-faint uppercase tracking-wide">Shipped</p>
+            <p className="font-display text-2xl font-bold mt-1 text-burgundy">{statusCounts.shipped || 0}</p>
           </div>
           <div className="stat-pill">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">Page Total</p>
-            <p className="text-2xl font-bold mt-1 text-emerald-400">${totalSpent.toFixed(2)}</p>
+            <p className="text-xs text-faint uppercase tracking-wide">Page Total</p>
+            <p className="font-display text-2xl font-bold mt-1 text-success">${totalSpent.toFixed(2)}</p>
           </div>
         </div>
 
@@ -176,7 +176,7 @@ export default function Orders() {
               {tab.label}
               {statusCounts[tab.key] !== undefined && (
                 <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${
-                  activeTab === tab.key ? 'bg-white/20' : 'bg-slate-700'
+                  activeTab === tab.key ? 'bg-white/20' : 'pipeline-dot-inactive'
                 }`}>
                   {tab.key === 'all' ? statusCounts.all : statusCounts[tab.key] || 0}
                 </span>
@@ -188,7 +188,7 @@ export default function Orders() {
         {/* Search bar */}
         <form onSubmit={handleSearch} className="flex gap-3 mb-4">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-faint" />
             <input
               className="input pl-10"
               placeholder="Search order #, customer, tracking, warehouse ref..."
@@ -205,12 +205,12 @@ export default function Orders() {
         </form>
 
         {/* Auto-fulfillment banner */}
-        <div className="flex items-center gap-3 p-3 mb-4 rounded-lg bg-brand-600/10 border border-brand-600/20 text-sm">
-          <Zap className="w-4 h-4 text-brand-400 shrink-0" />
-          <span className="text-slate-300">
-            <strong className="text-brand-300">Auto-fulfillment enabled</strong> — Shopify orders auto-buy on Taobao → Superbly warehouse → auto-ship to customer
+        <div className="flex items-center gap-3 p-3 mb-4 banner-auto text-sm">
+          <Zap className="w-4 h-4 text-gold shrink-0" />
+          <span className="text-ink">
+            <strong className="text-burgundy">Auto-fulfillment enabled</strong> — Shopify orders auto-buy on Taobao → Superbly warehouse → auto-ship to customer
           </span>
-          <Link to="/settings" className="ml-auto text-brand-400 hover:text-brand-300 text-xs whitespace-nowrap">Settings →</Link>
+          <Link to="/settings" className="ml-auto text-burgundy hover:text-gold text-xs whitespace-nowrap font-display">Settings →</Link>
         </div>
 
         {/* Orders table */}
@@ -232,7 +232,7 @@ export default function Orders() {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-16 text-slate-500">
+                  <td colSpan={9} className="text-center py-16 text-faint">
                     <Package className="w-10 h-10 mx-auto mb-3 opacity-40" />
                     {loading ? 'Loading orders...' : 'No orders found. Orders sync automatically from Shopify.'}
                   </td>
@@ -249,12 +249,12 @@ export default function Orders() {
                       onClick={() => setSelected(o)}
                     >
                       <td>
-                        <div className="font-medium text-white">{o.shopifyOrderNum || `#${o.id.slice(0, 8)}`}</div>
+                        <div className="font-display font-semibold text-ink">{o.shopifyOrderNum || `#${o.id.slice(0, 8)}`}</div>
                         {o.warehouseRef && (
-                          <div className="text-xs text-slate-500 font-mono mt-0.5">{o.warehouseRef}</div>
+                          <div className="text-xs text-faint font-mono mt-0.5">{o.warehouseRef}</div>
                         )}
                         {o.shop?.shopDomain && (
-                          <div className="text-xs text-slate-600 mt-0.5">{o.shop.shopDomain}</div>
+                          <div className="text-xs text-faint mt-0.5">{o.shop.shopDomain}</div>
                         )}
                       </td>
                       <td>
@@ -264,31 +264,31 @@ export default function Orders() {
                             return (
                               <div key={item.id} className="relative group">
                                 {img ? (
-                                  <img src={img} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-700" />
+                                  <img src={img} alt="" className="w-10 h-10 object-cover thumb-border" />
                                 ) : (
-                                  <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
-                                    <Package className="w-4 h-4 text-slate-600" />
+                                  <div className="w-10 h-10 vintage-inset flex items-center justify-center">
+                                    <Package className="w-4 h-4 text-faint" />
                                   </div>
                                 )}
-                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-600 rounded-full text-[10px] flex items-center justify-center">
+                                <span className="absolute -top-1 -right-1 w-4 h-4 qty-badge rounded-full text-[10px] flex items-center justify-center">
                                   {item.quantity}
                                 </span>
                               </div>
                             );
                           })}
                           {(o.items?.length || 0) > 3 && (
-                            <span className="text-xs text-slate-500">+{(o.items?.length || 0) - 3}</span>
+                            <span className="text-xs text-faint">+{(o.items?.length || 0) - 3}</span>
                           )}
                         </div>
                       </td>
                       <td>
                         <div className="font-medium">{o.customerName}</div>
-                        <div className="text-xs text-slate-500">{addr.city}, {addr.country}</div>
+                        <div className="text-xs text-faint">{addr.city}, {addr.country}</div>
                       </td>
                       <td>
                         <StatusBadge status={o.status} />
                         {o.automationError && (
-                          <div className="text-xs text-red-400 mt-1 max-w-[120px] truncate" title={o.automationError}>
+                          <div className="text-xs text-burgundy mt-1 max-w-[120px] truncate" title={o.automationError}>
                             Error
                           </div>
                         )}
@@ -298,26 +298,26 @@ export default function Orders() {
                       </td>
                       <td>
                         <div className="font-medium">${o.totalCost.toFixed(2)}</div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-faint">
                           Product ${o.subtotal.toFixed(2)} + Ship ${o.shippingCost.toFixed(2)}
                         </div>
                       </td>
                       <td>
                         {outbound?.trackingNumber ? (
                           <div>
-                            <div className="text-xs font-mono text-brand-400">{outbound.trackingNumber}</div>
-                            <div className="text-xs text-slate-600">{outbound.carrier}</div>
+                            <div className="text-xs font-mono text-burgundy">{outbound.trackingNumber}</div>
+                            <div className="text-xs text-faint">{outbound.carrier}</div>
                           </div>
                         ) : inbound?.trackingNumber ? (
                           <div>
-                            <div className="text-xs font-mono text-slate-400">{inbound.trackingNumber}</div>
-                            <div className="text-xs text-slate-600">Inbound CN</div>
+                            <div className="text-xs font-mono text-muted">{inbound.trackingNumber}</div>
+                            <div className="text-xs text-faint">Inbound CN</div>
                           </div>
                         ) : (
-                          <span className="text-xs text-slate-600">—</span>
+                          <span className="text-xs text-faint">—</span>
                         )}
                       </td>
-                      <td className="text-xs text-slate-400 whitespace-nowrap">{formatDate(o.createdAt)}</td>
+                      <td className="text-xs text-muted whitespace-nowrap">{formatDate(o.createdAt)}</td>
                       <td>
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                           {o.status === 'inbound_transit' && (
@@ -329,7 +329,7 @@ export default function Orders() {
                               Receive
                             </button>
                           )}
-                          <Link to={`/orders/${o.id}`} className="p-1.5 rounded hover:bg-slate-700 text-slate-400 hover:text-white">
+                          <Link to={`/orders/${o.id}`} className="p-1.5 rounded hover:pipeline-dot-inactive text-muted hover:text-ink">
                             <ChevronRight className="w-4 h-4" />
                           </Link>
                         </div>
@@ -368,7 +368,7 @@ function ProcurementSteps({ status }: { status: string }) {
           key={label}
           title={label}
           className={`w-6 h-1.5 rounded-full ${
-            i <= idx ? 'bg-brand-500' : 'bg-slate-700'
+            i <= idx ? 'pipeline-dot-active' : 'pipeline-dot-inactive'
           }`}
         />
       ))}
@@ -393,32 +393,32 @@ function OrderDrawer({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-slate-900 border-l border-slate-800 overflow-y-auto">
-        <div className="p-6 border-b border-slate-800 flex items-start justify-between">
+      <div className="absolute inset-0 drawer-overlay" onClick={onClose} />
+      <div className="relative w-full max-w-lg drawer-panel overflow-y-auto">
+        <div className="p-6 border-b border-[var(--color-sepia)] flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold">{order.shopifyOrderNum || 'Order Detail'}</h2>
-            <p className="text-sm text-slate-400 mt-1">{formatDate(order.createdAt)}</p>
+            <h2 className="font-display text-2xl font-bold text-ink">{order.shopifyOrderNum || 'Order Detail'}</h2>
+            <p className="text-sm text-muted mt-1 italic">{formatDate(order.createdAt)}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
+          <button onClick={onClose} className="text-faint hover:text-ink text-2xl leading-none font-display">&times;</button>
         </div>
 
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <StatusBadge status={order.status} />
-            <span className="text-lg font-bold">${order.totalCost.toFixed(2)}</span>
+            <span className="font-display text-xl font-bold text-ink">${order.totalCost.toFixed(2)}</span>
           </div>
 
           {order.warehouseRef && (
-            <div className="p-3 rounded-lg bg-slate-800/50 text-sm">
-              <span className="text-slate-500">Warehouse ref:</span>{' '}
-              <span className="font-mono text-brand-400">{order.warehouseRef}</span>
+            <div className="p-3 vintage-inset text-sm">
+              <span className="text-faint">Warehouse ref:</span>{' '}
+              <span className="font-mono text-burgundy">{order.warehouseRef}</span>
             </div>
           )}
 
           {/* Timeline */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">Procurement Timeline</h3>
+            <h3 className="section-label mb-3">Procurement Timeline</h3>
             <div className="space-y-3">
               {[
                 { icon: Zap, label: 'Shopify order synced', done: true },
@@ -429,13 +429,13 @@ function OrderDrawer({
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    step.done ? 'bg-brand-600/20 text-brand-400' : 'bg-slate-800 text-slate-600'
+                    step.done ? 'step-icon-done' : 'step-icon-pending'
                   }`}>
                     <step.icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className={`text-sm ${step.done ? 'text-slate-200' : 'text-slate-500'}`}>{step.label}</p>
-                    {step.tracking && <p className="text-xs font-mono text-slate-500">{step.tracking}</p>}
+                    <p className={`text-sm ${step.done ? 'text-ink' : 'text-faint'}`}>{step.label}</p>
+                    {step.tracking && <p className="text-xs font-mono text-faint">{step.tracking}</p>}
                   </div>
                 </div>
               ))}
@@ -444,15 +444,15 @@ function OrderDrawer({
 
           {/* Products */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">Products</h3>
+            <h3 className="section-label mb-3">Products</h3>
             {order.items?.map((item) => {
               const img = getProductImage(item.product);
               return (
-                <div key={item.id} className="flex items-center gap-3 py-2 border-b border-slate-800 last:border-0">
-                  {img && <img src={img} alt="" className="w-12 h-12 rounded-lg object-cover" />}
+                <div key={item.id} className="flex items-center gap-3 py-2 border-b border-[var(--color-sepia)] last:border-0">
+                  {img && <img src={img} alt="" className="w-12 h-12 object-cover thumb-border" />}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{item.product.title}</p>
-                    <p className="text-xs text-slate-500">Qty {item.quantity} · ${item.unitCost.toFixed(2)}</p>
+                    <p className="text-sm font-medium truncate text-ink">{item.product.title}</p>
+                    <p className="text-xs text-faint">Qty {item.quantity} · ${item.unitCost.toFixed(2)}</p>
                   </div>
                 </div>
               );
@@ -461,15 +461,15 @@ function OrderDrawer({
 
           {/* Customer */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">Ship To (auto-used)</h3>
-            <p className="text-sm">{addr.name || order.customerName}</p>
-            <p className="text-sm text-slate-400">{addr.address1}</p>
-            <p className="text-sm text-slate-400">{addr.city}, {addr.province} {addr.zip}</p>
-            <p className="text-sm text-slate-400">{addr.country}</p>
+            <h3 className="section-label mb-2">Ship To (auto-used)</h3>
+            <p className="text-sm text-ink">{addr.name || order.customerName}</p>
+            <p className="text-sm text-muted">{addr.address1}</p>
+            <p className="text-sm text-muted">{addr.city}, {addr.province} {addr.zip}</p>
+            <p className="text-sm text-muted">{addr.country}</p>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 pt-4 border-t border-slate-800">
+          <div className="flex gap-2 pt-4 border-t border-[var(--color-sepia)]">
             {order.status === 'inbound_transit' && (
               <button
                 className="btn-primary flex-1 text-sm"
