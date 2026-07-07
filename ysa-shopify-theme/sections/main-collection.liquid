@@ -1,0 +1,39 @@
+{{ 'ysa-homepage.css' | asset_url | stylesheet_tag }}
+
+<div class="ysa-page" style="max-width: 1200px; margin: 0 auto; padding: 48px 24px;">
+  <p style="margin-bottom: 24px;"><a href="{{ routes.root_url }}" style="color: #0c1a2e;">&larr; Back to store</a></p>
+  <h1 style="font-family: Georgia, serif; font-size: 2.5rem; color: #0c1a2e; margin-bottom: 8px;">{{ collection.title }}</h1>
+  {% if collection.description != blank %}
+    <div style="margin-bottom: 40px; color: #6b6560;">{{ collection.description }}</div>
+  {% endif %}
+
+  <div class="ysa-products" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px 24px;">
+    {% for product in collection.products %}
+      <a href="{{ product.url }}" class="ysa-product-card" style="text-decoration: none; color: inherit;">
+        <div class="ysa-product-image-wrap" style="aspect-ratio: 3/4; overflow: hidden; background: #f7f3eb; margin-bottom: 16px;">
+          {% if product.featured_image %}
+            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', style: 'width: 100%; height: 100%; object-fit: cover;' }}
+          {% endif %}
+        </div>
+        <p class="ysa-product-category" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6560; margin-bottom: 8px;">{{ product.type }}</p>
+        <h3 class="ysa-product-name" style="font-family: Georgia, serif; font-size: 18px; color: #0c1a2e; margin-bottom: 8px;">{{ product.title }}</h3>
+        <p class="ysa-product-price">{{ product.price | money }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    .ysa-products { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "class": "ysa-main-collection",
+  "settings": []
+}
+{% endschema %}
