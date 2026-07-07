@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  company       String?
+  walletBalance Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  shops         ShopifyShop[]
+  products      SourcedProduct[]
+  orders        FulfillmentOrder[]
+  walletTxns    WalletTransaction[]
+}
+
+model ShopifyShop {
+  id           String   @id @default(uuid())
+  merchantId   String
+  shopDomain   String   @unique
+  accessToken  String?
+  isConnected  Boolean  @default(false)
+  installedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  merchant     Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  products     SourcedProduct[]
+  orders       FulfillmentOrder[]
+}
+
+model SourcedProduct {
+  id              String   @id @default(uuid())
+  merchantId      String
+  shopId          String?
+  taobaoItemId    String
+  taobaoUrl       String
+  title           String
+  titleEn         String?
+  description     String?
+  images          String   // JSON array
+  variants        String   // JSON array of variant objects
+  supplierName    String?
+  supplierPrice   Float
+  sellingPrice    Float?
+  markupPercent   Float    @default(200)
+  stock           Int      @default(100)
+  category        String?
+  weight          Float    @default(0.5) // kg
+  shopifyProductId String?
+  shopifySynced   Boolean  @default(false)
+  status          String   @default("draft") // draft, active, archived
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  merchant        Merchant     @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  shop            ShopifyShop? @relation(fields: [shopId], references: [id])
+  orderItems      OrderItem[]
+}
+
+model FulfillmentOrder {
+  id                String   @id @default(uuid())
+  merchantId        String
+  shopId            String?
+  shopifyOrderId    String?
+  shopifyOrderNum   String?
+  customerName      String
+  customerEmail     String?
+  shippingAddress   String   // JSON
+  status            String   @default("pending") // pending, sourcing, qc, packed, shipped, delivered, cancelled
+  subtotal          Float
+  shippingCost      Float    @default(0)
+  serviceFee        Float    @default(0)
+  totalCost         Float    @default(0)
+  trackingNumber    String?
+  carrier           String?
+  shippingMethod    String?
+  estimatedDelivery DateTime?
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  merchant          Merchant     @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  shop              ShopifyShop? @relation(fields: [shopId], references: [id])
+  items             OrderItem[]
+  qcRecords         QCRecord[]
+  shipments         Shipment[]
+  statusHistory     OrderStatusHistory[]
+}
+
+model OrderItem {
+  id          String @id @default(uuid())
+  orderId     String
+  productId   String
+  variantSku  String?
+  variantName String?
+  quantity    Int
+  unitCost    Float
+  unitPrice   Float
+
+  order       FulfillmentOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     SourcedProduct   @relation(fields: [productId], references: [id])
+}
+
+model QCRecord {
+  id          String   @id @default(uuid())
+  orderId     String
+  inspector   String?
+  result      String   // pass, minor_flaw, major_defect, reject
+  notes       String?
+  photos      String?  // JSON array
+  inspectedAt DateTime @default(now())
+
+  order       FulfillmentOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Shipment {
+  id              String   @id @default(uuid())
+  orderId         String
+  carrier         String
+  service         String
+  trackingNumber  String
+  weight          Float
+  dimensions      String?  // JSON
+  shippingCost    Float
+  origin          String   @default("Guangzhou, China")
+  destination     String
+  status          String   @default("label_created") // label_created, picked_up, in_transit, customs, out_for_delivery, delivered
+  labelUrl        String?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  order           FulfillmentOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  trackingEvents  TrackingEvent[]
+}
+
+model TrackingEvent {
+  id          String   @id @default(uuid())
+  shipmentId  String
+  status      String
+  location    String?
+  description String
+  occurredAt  DateTime @default(now())
+
+  shipment    Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(uuid())
+  orderId   String
+  status    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  order     FulfillmentOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model ShippingRoute {
+  id              String  @id @default(uuid())
+  name            String
+  carrier         String
+  service         String
+  destinationZone String  // US, EU, UK, CA, AU, GLOBAL
+  minDays         Int
+  maxDays         Int
+  baseRate        Float   // per kg in USD
+  perKgRate       Float
+  maxWeight       Float   @default(30)
+  includesCustoms Boolean @default(false)
+  isActive        Boolean @default(true)
+  description     String?
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid())
+  merchantId  String
+  type        String   // deposit, deduction, refund
+  amount      Float
+  balance     Float
+  description String
+  referenceId String?
+  createdAt   DateTime @default(now())
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+}

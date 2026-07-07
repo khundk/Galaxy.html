@@ -1,239 +1,193 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mini Galaxy — 3D Particle Generator</title>
-<style>
-  html,body { height:100%; margin:0; background:#000; overflow:hidden; font-family:Arial,Helvetica,sans-serif; }
-  #info { position: absolute; left: 12px; top: 12px; color: #ddd; user-select: none; z-index: 2; }
-  #info b{ color:#fff }
-  a { color: #88f; }
-  #credit { position: absolute; left: 12px; bottom: 12px; color: rgba(255,255,255,0.6); z-index:2; font-size:12px; }
-</style>
-</head>
-<body>
-<div id="info">
-  <div><b>Mini Galaxy</b> — drag to rotate, scroll to zoom</div>
-  <div style="margin-top:6px; font-size:13px">Adjust parameters in the GUI (top-right). Try increasing <i>particles</i> and <i>spin</i>.</div>
-</div>
-<div id="credit">Generated with Three.js — mini galaxy demo</div>
+# SuperBridge
 
-<!-- Three.js -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<!-- Orbit Controls -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
-<!-- dat.GUI for controls -->
-<script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
+**Your own BuckyDrop alternative** — a full-stack Taobao-to-Shopify dropshipping fulfillment platform with warehousing, quality control, and international shipping.
 
-<script>
-(() => {
-  // Scene setup
-  const scene = new THREE.Scene();
-  const canvas = document.createElement('canvas');
-  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+Built for merchants like **Superbly** who want to source products from Taobao, sell on Shopify, and handle fulfillment without paying a middleman platform.
 
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 20, 40);
+## What SuperBridge Does
 
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
+SuperBridge replaces services like BuckyDrop by giving you direct control over the entire supply chain:
 
-  // Light for subtle effect (not necessary for Points but helps if you add meshes)
-  const amb = new THREE.AmbientLight(0xffffff, 0.2);
-  scene.add(amb);
+| Stage | What Happens |
+|-------|-------------|
+| **Source** | Import products from Taobao by URL or search |
+| **List** | Sync products to your Shopify store with markup |
+| **Order** | Shopify orders flow in automatically via webhooks |
+| **Purchase** | Platform buys items from Taobao suppliers |
+| **QC** | Quality inspection at your Guangzhou warehouse |
+| **Pack** | Repackage with your branding (blind shipping) |
+| **Ship** | International delivery via YunExpress, 4PX, CNE |
+| **Track** | Full tracking from warehouse to customer door |
 
-  // Parameters (GUI)
-  const params = {
-    particles: 25000,
-    radius: 20,
-    branches: 4,
-    spin: 1.5,
-    randomness: 0.5,
-    randomnessPower: 2,
-    insideColor: '#ffddaa',
-    outsideColor: '#2255ff',
-    size: 0.06,
-    rotateSpeed: 0.02,
-    autoRotate: true,
-    regenerate: generateGalaxy
-  };
+## Architecture
 
-  let galaxyPoints = null;
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│   Taobao    │────▶│  SuperBridge │────▶│    Shopify      │
+│  (Source)   │     │  Platform    │     │  (Your Store)   │
+└─────────────┘     └──────┬───────┘     └─────────────────┘
+                           │
+                    ┌──────▼───────┐
+                    │  Warehouse   │
+                    │  QC · Pack   │
+                    └──────┬───────┘
+                           │
+                    ┌──────▼───────┐
+                    │  Carriers    │
+                    │  Global Ship │
+                    └──────────────┘
+```
 
-  // Generate galaxy geometry & points
-  function generateGalaxy() {
-    // Dispose old
-    if (galaxyPoints !== null) {
-      galaxyPoints.geometry.dispose();
-      galaxyPoints.material.dispose();
-      scene.remove(galaxyPoints);
-      galaxyPoints = null;
-    }
+## Quick Start
 
-    const positions = new Float32Array(params.particles * 3);
-    const colors = new Float32Array(params.particles * 3);
-    const sizes = new Float32Array(params.particles);
+```bash
+# Install dependencies
+npm install
 
-    const insideColor = new THREE.Color(params.insideColor);
-    const outsideColor = new THREE.Color(params.outsideColor);
+# Set up database
+cd packages/api
+cp .env.example .env
+npx prisma db push
+npm run db:seed
 
-    for (let i = 0; i < params.particles; i++) {
-      const i3 = i * 3;
+# Start both API and dashboard
+cd ../..
+npm run dev
+```
 
-      // Radius from center (0 .. radius)
-      const r = Math.random() ** 1.2 * params.radius;
+- **Dashboard**: http://localhost:5173
+- **API**: http://localhost:3001
 
-      // Place particle in arm
-      const branch = i % params.branches;
-      const branchAngle = (branch / params.branches) * Math.PI * 2;
-      // add spin proportional to radius
-      const spinAngle = r * params.spin * 0.1;
-      const angle = branchAngle + spinAngle;
+A demo merchant (`demo@superbly.com`) with $500 wallet balance is created on seed.
 
-      // Random offsets (control with randomnessPower for distribution)
-      const randomX = (Math.random() ** params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * r;
-      const randomY = (Math.random() ** params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * r * 0.3; // thin disk
-      const randomZ = (Math.random() ** params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * r;
+## How to Use
 
-      const x = Math.cos(angle) * r + randomX;
-      const y = randomY * 0.6; // compress height a bit
-      const z = Math.sin(angle) * r + randomZ;
+### 1. Connect Shopify
+Go to **Settings** → enter your `store.myshopify.com` domain → Connect.
 
-      positions[i3 + 0] = x;
-      positions[i3 + 1] = y;
-      positions[i3 + 2] = z;
+For testing without Shopify credentials, use **Demo Connect**.
 
-      // Color interpolation: center -> insideColor; edge -> outsideColor
-      const t = r / params.radius;
-      const mixed = insideColor.clone().lerp(outsideColor, t);
+### 2. Import Taobao Products
+Go to **Products** → search the catalog or paste a Taobao URL → set your markup % → Import.
 
-      colors[i3 + 0] = mixed.r;
-      colors[i3 + 1] = mixed.g;
-      colors[i3 + 2] = mixed.b;
+Try these demo item IDs: `tb-10001` (hoodie), `tb-10002` (earbuds), `tb-10003` (vase).
 
-      sizes[i] = params.size * (0.6 + (1 - t) * 0.8 * Math.random());
-    }
+### 3. Sync to Shopify
+Click **Sync to Shopify** on any imported product. It creates the listing in your store.
 
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+### 4. Fulfill Orders
+When a customer orders:
+1. Order appears in **Orders** (auto from Shopify webhook, or create a test order)
+2. Click the order → **Advance** through: Pending → Sourcing → QC → Packed
+3. Select a shipping route → Ship
+4. Track delivery progress
 
-    // Use a custom shader material for additive glow-like points
-    const vertexShader = `
-      attribute float size;
-      varying vec3 vColor;
-      void main() {
-        vColor = color;
-        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * (300.0 / -mvPosition.z); // size attenuation
-        gl_Position = projectionMatrix * mvPosition;
-      }
-    `;
+### 5. Shipping
+Use the **Shipping** page to calculate rates by weight and destination. Routes cover US, UK, EU, CA, AU, and global.
 
-    const fragmentShader = `
-      varying vec3 vColor;
-      void main() {
-        // circular soft point
-        float dist = length(gl_PointCoord - vec2(0.5));
-        float alpha = smoothstep(0.5, 0.0, dist);
-        // Additive feel
-        gl_FragColor = vec4(vColor, alpha);
-      }
-    `;
+## Shipping Strategy (How to Conduct Shipping)
 
-    const material = new THREE.ShaderMaterial({
-      vertexColors: true,
-      vertexShader,
-      fragmentShader,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending
-    });
+This is the operational playbook for running fulfillment without BuckyDrop:
 
-    galaxyPoints = new THREE.Points(geometry, material);
-    scene.add(galaxyPoints);
-  }
+### Warehouse Setup
+1. **Location**: Rent space in Guangzhou or Shenzhen (near Taobao suppliers)
+2. **Staff**: 1-2 warehouse workers for receiving, QC, and packing
+3. **Supplies**: Branded poly mailers, boxes, bubble wrap, thank-you cards
 
-  // Initial generate
-  generateGalaxy();
+### Per-Order Workflow
+1. **Receive** — Taobao items arrive at warehouse (1-3 days domestic)
+2. **QC** — Inspect each item: correct SKU, no defects, matches listing photos
+3. **Repack** — Remove Taobao packaging/branding, pack in your branded materials
+4. **Weigh** — Measure actual weight for accurate shipping cost
+5. **Ship** — Choose route based on destination, urgency, and customs needs
+6. **Track** — Push tracking number back to Shopify for customer notification
 
-  // GUI
-  const gui = new dat.GUI({ width: 330 });
-  gui.add(params, 'particles', 1000, 150000, 1000).name('Particles').onFinishChange(generateGalaxy);
-  gui.add(params, 'radius', 5, 60, 1).name('Radius').onFinishChange(generateGalaxy);
-  gui.add(params, 'branches', 2, 12, 1).name('Arms').onFinishChange(generateGalaxy);
-  gui.add(params, 'spin', -5, 5, 0.01).name('Spin').onFinishChange(generateGalaxy);
-  gui.add(params, 'randomness', 0, 2, 0.01).name('Randomness').onFinishChange(generateGalaxy);
-  gui.add(params, 'randomnessPower', 0.1, 10, 0.1).name('Random Power').onFinishChange(generateGalaxy);
-  gui.addColor(params, 'insideColor').name('Inner Color').onChange(generateGalaxy);
-  gui.addColor(params, 'outsideColor').name('Outer Color').onChange(generateGalaxy);
-  gui.add(params, 'size', 0.01, 0.5, 0.01).name('Base Size').onFinishChange(() => {
-    if (galaxyPoints) {
-      const sizes = galaxyPoints.geometry.attributes.size.array;
-      for (let i=0;i<sizes.length;i++) sizes[i] = params.size*(0.6 + Math.random()*0.8);
-      galaxyPoints.geometry.attributes.size.needsUpdate = true;
-    }
-  });
-  gui.add(params, 'rotateSpeed', 0, 0.5, 0.001).name('Rotation Speed');
-  gui.add(params, 'autoRotate').name('Auto Rotate');
-  gui.add(params, 'regenerate').name('Regenerate');
+### Carrier Selection Guide
 
-  // Resize handling
-  window.addEventListener('resize', onWindowResize, false);
-  function onWindowResize(){
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+| Destination | Recommended | Delivery | Customs |
+|------------|-------------|----------|---------|
+| USA (fast) | YunExpress Express DDP | 7-12 days | Tax included |
+| USA (cheap) | YunExpress Standard | 12-20 days | Customer pays |
+| UK | 4PX Express DDP | 6-10 days | Tax included |
+| EU | 4PX Standard | 10-18 days | Customer pays |
+| Canada | CNE Express | 8-14 days | Customer pays |
+| Australia | CNE Express | 7-12 days | Customer pays |
+| Other | China Post ePacket | 15-30 days | Customer pays |
 
-  // Animation loop
-  let lastTime = 0;
-  function animate(time) {
-    const dt = (time - lastTime) / 1000 || 0;
-    lastTime = time;
+**DDP** (Delivered Duty Paid) = you pay import taxes, better customer experience.
+**DDU** (Delivered Duty Unpaid) = customer pays customs, cheaper for you.
 
-    if (params.autoRotate && galaxyPoints) {
-      galaxyPoints.rotation.y += params.rotateSpeed * dt * 60; // normalized
-    }
+### Cost Structure
+- **Product cost**: Taobao supplier price
+- **Service fee**: 5% platform fee (configurable)
+- **Domestic shipping**: ~$0.50-1.00 per Taobao order (China domestic)
+- **International shipping**: Based on weight + route (see calculator)
+- **QC/packing**: ~$0.30-0.50 per item
 
-    controls.update();
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
-  requestAnimationFrame(animate);
+### Wallet System
+Merchants pre-fund a wallet. When an order ships, total cost (product + service fee + shipping) is deducted automatically.
 
-  // Nice background starfield (static)
-  function makeStarfield() {
-    const starGeo = new THREE.BufferGeometry();
-    const starCount = 1000;
-    const pos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      const r = 200 + Math.random() * 400;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = (Math.random() - 0.5) * Math.PI;
-      pos[i*3] = Math.cos(theta) * Math.cos(phi) * r;
-      pos[i*3+1] = Math.sin(phi) * r;
-      pos[i*3+2] = Math.sin(theta) * Math.cos(phi) * r;
-    }
-    starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0x9999ff, size: 0.6, sizeAttenuation: true, transparent: true, opacity: 0.65 });
-    const stars = new THREE.Points(starGeo, starMat);
-    scene.add(stars);
-  }
-  makeStarfield();
+## Production Deployment
 
-  // Helpful shortcuts
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'r') { params.autoRotate = !params.autoRotate; gui.updateDisplay(); }
-    if (e.key === 'g') { generateGalaxy(); }
-  });
-})();
-</script>
-</body>
-</html>
+### Shopify App Setup
+1. Create a [Shopify Partner](https://partners.shopify.com) account
+2. Create a custom app with scopes: `read_products`, `write_products`, `read_orders`, `write_orders`
+3. Set redirect URL to `https://your-api.com/api/shopify/callback`
+4. Register webhook: `orders/create` → `https://your-api.com/api/shopify/webhooks/orders`
+5. Add credentials to `.env`
+
+### Taobao Integration
+The demo uses a mock catalog. For production, choose one of:
+- **Taobao Open Platform API** — requires business registration in China
+- **1688 Open API** — better for wholesale, easier API access
+- **Manual procurement team** — hire buyers on Taobao to purchase on your behalf
+- **Browser extension** — build a Chrome extension that scrapes product data (like BuckyDrop's)
+
+### Carrier API Integration
+Contact these providers for API access:
+- **YunExpress** (yunexpress.com) — best for US/UK DDP
+- **4PX** (4px.com) — strong EU coverage
+- **CNE** (cnexps.com) — good for CA/AU
+- **ShipStation / Easyship** — aggregator that connects multiple carriers
+
+## Project Structure
+
+```
+superbridge/
+├── packages/
+│   ├── api/                 # Express API server
+│   │   ├── prisma/          # Database schema & seed
+│   │   └── src/
+│   │       ├── routes/      # API endpoints
+│   │       └── services/    # Business logic
+│   │           ├── taobao.ts    # Product sourcing
+│   │           ├── shopify.ts   # Store integration
+│   │           └── shipping.ts  # Fulfillment & logistics
+│   └── web/                 # React dashboard
+│       └── src/
+│           ├── pages/       # Dashboard, Products, Orders, Shipping, Settings
+│           └── components/  # Shared UI
+└── package.json             # Monorepo root
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check |
+| GET | `/api/merchants` | List merchants |
+| GET | `/api/merchants/:id/dashboard` | Dashboard stats |
+| POST | `/api/products/import` | Import from Taobao |
+| GET | `/api/products/search?q=` | Search Taobao catalog |
+| POST | `/api/products/:id/sync-shopify` | Push to Shopify |
+| GET | `/api/shopify/connect` | Start OAuth flow |
+| POST | `/api/shopify/webhooks/orders` | Receive Shopify orders |
+| GET | `/api/orders` | List fulfillment orders |
+| POST | `/api/orders/:id/advance` | Move through pipeline |
+| POST | `/api/orders/:id/ship` | Create shipment |
+| GET | `/api/shipping/routes` | List shipping routes |
+| POST | `/api/shipping/quote` | Calculate shipping cost |
+
+## License
+
+MIT
