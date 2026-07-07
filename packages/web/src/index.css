@@ -1,0 +1,427 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Lora", Georgia, "Times New Roman", serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-mono: "Special Elite", "Courier New", monospace;
+
+  --color-parchment: #f0e6d3;
+  --color-parchment-dark: #e2d4bc;
+  --color-paper: #faf5eb;
+  --color-wood: #2a2118;
+  --color-wood-mid: #3d3228;
+  --color-wood-light: #524436;
+  --color-ink: #2c1810;
+  --color-ink-muted: #6b5344;
+  --color-ink-faint: #9a8472;
+  --color-burgundy: #6b2c2c;
+  --color-burgundy-dark: #4a1e1e;
+  --color-burgundy-light: #8b3a3a;
+  --color-gold: #a67c00;
+  --color-gold-light: #c9a227;
+  --color-sepia: #c4a882;
+  --color-sepia-dark: #8b7355;
+  --color-brand-500: #8b3a3a;
+  --color-brand-600: #6b2c2c;
+  --color-brand-700: #4a1e1e;
+}
+
+/* Aged paper texture */
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-parchment);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(166, 124, 0, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(107, 44, 44, 0.05) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.font-mono, code, .font-mono * {
+  font-family: var(--font-mono);
+}
+
+/* ── Semantic text ── */
+.text-muted { color: var(--color-ink-muted); }
+.text-faint { color: var(--color-ink-faint); }
+.text-ink { color: var(--color-ink); }
+.text-gold { color: var(--color-gold); }
+.text-burgundy { color: var(--color-burgundy); }
+
+/* ── Cards — aged stationery ── */
+.card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-sepia);
+  border-radius: 4px;
+  padding: 1.5rem;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 2px 8px rgba(44, 24, 16, 0.08),
+    0 0 0 1px rgba(139, 115, 85, 0.15);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(196, 168, 130, 0.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* ── Buttons — vintage press style ── */
+.btn-primary {
+  background: linear-gradient(180deg, var(--color-burgundy-light) 0%, var(--color-burgundy) 100%);
+  color: #faf5eb;
+  padding: 0.5rem 1.25rem;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--color-burgundy-dark);
+  box-shadow: 0 2px 0 var(--color-burgundy-dark), 0 3px 6px rgba(44, 24, 16, 0.2);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #9b4444 0%, var(--color-burgundy-light) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--color-burgundy-dark), 0 4px 8px rgba(44, 24, 16, 0.25);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--color-burgundy-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dark) 100%);
+  color: var(--color-ink);
+  padding: 0.5rem 1.25rem;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--color-sepia-dark);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 2px 4px rgba(44,24,16,0.1);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(180deg, #f5ede0 0%, var(--color-parchment) 100%);
+  border-color: var(--color-sepia);
+}
+
+/* ── Inputs — ledger book ── */
+.input {
+  width: 100%;
+  background: #fffef9;
+  border: 1px solid var(--color-sepia-dark);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  box-shadow: 0 1px 2px rgba(44, 24, 16, 0.06) inset;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input::placeholder {
+  color: var(--color-ink-faint);
+  font-style: italic;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 2px rgba(107, 44, 44, 0.15), 0 1px 2px rgba(44, 24, 16, 0.06) inset;
+}
+
+/* ── Badges — wax seal stamps ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.badge-pending       { background: #f5edd8; color: #7a5c00; border-color: #c9a227; }
+.badge-taobao_ordered{ background: #f8ece0; color: #8b4513; border-color: #c49a6c; }
+.badge-inbound_transit{ background: #e8eef5; color: #3a5070; border-color: #8ba4c4; }
+.badge-at_warehouse  { background: #ede8f0; color: #4a3560; border-color: #a08bc4; }
+.badge-sourcing      { background: #e8eef5; color: #3a5070; border-color: #8ba4c4; }
+.badge-qc            { background: #ede8f0; color: #4a3560; border-color: #a08bc4; }
+.badge-packed        { background: #e0f0ee; color: #2a5048; border-color: #7ab4a8; }
+.badge-shipped       { background: #e5eaf5; color: #2a3860; border-color: #8090c4; }
+.badge-delivered     { background: #e5f0e5; color: #2a5028; border-color: #7ab47a; }
+.badge-cancelled     { background: #f5e5e5; color: #6b2c2c; border-color: #c47a7a; }
+.badge-failed        { background: #f5e5e5; color: #6b2c2c; border-color: #c47a7a; }
+
+/* ── Layout ── */
+.main-content {
+  flex: 1;
+  overflow: auto;
+  background: transparent;
+}
+
+.admin-page {
+  padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ── Admin table — merchant ledger ── */
+.admin-table-wrap {
+  background: var(--color-paper);
+  border: 1px solid var(--color-sepia);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44, 24, 16, 0.1);
+}
+
+.admin-table {
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.admin-table thead {
+  background: linear-gradient(180deg, var(--color-wood-mid) 0%, var(--color-wood) 100%);
+  color: #d4c4a8;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--color-sepia);
+  vertical-align: middle;
+  color: var(--color-ink);
+}
+
+.admin-table tbody tr {
+  transition: background 0.15s;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(196, 168, 130, 0.15);
+}
+
+/* ── Status tabs — filing cabinet labels ── */
+.status-tab {
+  padding: 0.45rem 1rem;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.status-tab-active {
+  background: linear-gradient(180deg, var(--color-burgundy-light) 0%, var(--color-burgundy) 100%);
+  color: #faf5eb;
+  border-color: var(--color-burgundy-dark);
+  box-shadow: 0 2px 4px rgba(44, 24, 16, 0.2);
+}
+
+.status-tab-inactive {
+  color: var(--color-ink-muted);
+  background: var(--color-paper);
+  border-color: var(--color-sepia);
+}
+
+.status-tab-inactive:hover {
+  color: var(--color-ink);
+  background: var(--color-parchment);
+  border-color: var(--color-sepia-dark);
+}
+
+.stat-pill {
+  background: var(--color-paper);
+  border: 1px solid var(--color-sepia);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 6px rgba(44, 24, 16, 0.07);
+}
+
+.stat-pill p:first-child {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 16rem;
+  background: linear-gradient(180deg, var(--color-wood-mid) 0%, var(--color-wood) 100%);
+  border-right: 3px solid var(--color-gold);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: 4px 0 16px rgba(44, 24, 16, 0.2);
+}
+
+.sidebar-brand {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: all 0.15s;
+  color: #c4a882;
+  border: 1px solid transparent;
+}
+
+.sidebar-nav-link:hover {
+  color: #f0e6d3;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(201, 162, 39, 0.2);
+}
+
+.sidebar-nav-link-active {
+  color: #faf5eb;
+  background: rgba(107, 44, 44, 0.5);
+  border-color: rgba(201, 162, 39, 0.4);
+  box-shadow: 0 0 12px rgba(107, 44, 44, 0.3) inset;
+}
+
+/* ── Drawer — correspondence folder ── */
+.drawer-panel {
+  background: var(--color-paper);
+  border-left: 3px solid var(--color-gold);
+  box-shadow: -8px 0 32px rgba(44, 24, 16, 0.2);
+}
+
+.drawer-overlay {
+  background: rgba(44, 24, 16, 0.55);
+}
+
+/* ── Banner ── */
+.banner-auto {
+  background: rgba(107, 44, 44, 0.08);
+  border: 1px solid rgba(107, 44, 44, 0.25);
+  border-radius: 3px;
+  color: var(--color-ink);
+}
+
+/* ── Ornamental divider ── */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-sepia-dark);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-sepia), transparent);
+}
+
+/* ── Step pipeline dots ── */
+.pipeline-dot-active { background: var(--color-burgundy); }
+.pipeline-dot-inactive { background: var(--color-sepia); }
+
+.vintage-inset {
+  background: rgba(196, 168, 130, 0.12);
+  border: 1px solid var(--color-sepia);
+  border-radius: 3px;
+}
+
+.vintage-row {
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+
+.vintage-row:hover {
+  background: rgba(196, 168, 130, 0.2);
+}
+
+.qty-badge {
+  background: var(--color-burgundy);
+  color: #faf5eb;
+  border: 1px solid var(--color-burgundy-dark);
+}
+
+.step-icon-done {
+  background: rgba(107, 44, 44, 0.12);
+  color: var(--color-burgundy);
+  border: 1px solid rgba(107, 44, 44, 0.25);
+}
+
+.step-icon-pending {
+  background: rgba(196, 168, 130, 0.2);
+  color: var(--color-ink-faint);
+  border: 1px solid var(--color-sepia);
+}
+
+.text-success { color: #2a5040; }
+.text-warning { color: var(--color-gold); }
+
+.thumb-border { border: 1px solid var(--color-sepia-dark); border-radius: 3px; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+.stat-value-gold { color: var(--color-gold); }
+.stat-value-burgundy { color: var(--color-burgundy); }
+.stat-value-success { color: #2a5040; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-parchment-dark); }
+::-webkit-scrollbar-thumb { background: var(--color-sepia-dark); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-wood-light); }

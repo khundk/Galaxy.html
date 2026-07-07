@@ -1,0 +1,19 @@
+{
+  "name": "superbridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Taobao-to-Shopify dropshipping platform with warehousing and international shipping",
+  "workspaces": [
+    "packages/api",
+    "packages/web"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w packages/api\" \"npm run dev -w packages/web\"",
+    "build": "npm run build -w packages/api && npm run build -w packages/web",
+    "db:push": "npm run db:push -w packages/api",
+    "db:seed": "npm run db:seed -w packages/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
