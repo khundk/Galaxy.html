@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "ysa_homepage": {
+      "type": "ysa-homepage",
+      "blocks": {
+        "collection_1": { "type": "collection" },
+        "collection_2": { "type": "collection" },
+        "collection_3": { "type": "collection" }
+      },
+      "block_order": ["collection_1", "collection_2", "collection_3"],
+      "settings": {
+        "announcement_text": "Complimentary shipping on orders over $150 · Spring Collection Now Available",
+        "brand_name": "YSA",
+        "tagline": "Est. MMXXV",
+        "menu": "main-menu",
+        "hero_eyebrow": "Spring / Summer 2026",
+        "hero_title": "Timeless Style, Refined Living",
+        "hero_subtitle": "Heritage craftsmanship meets modern elegance. Discover the new YSA collection.",
+        "hero_btn_text": "Shop Collection",
+        "hero_btn2_text": "Discover YSA",
+        "products_count": 4,
+        "story_title": "A Legacy of American Elegance",
+        "story_text": "Founded on the belief that true style is timeless, YSA creates clothing that transcends seasons and trends."
+      }
+    }
+  },
+  "order": ["ysa_homepage"]
+}

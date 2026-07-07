@@ -1,0 +1,16 @@
+{{ 'ysa-homepage.css' | asset_url | stylesheet_tag }}
+
+<div class="ysa-page" style="max-width: 700px; margin: 0 auto; padding: 80px 24px; text-align: center;">
+  <h1 style="font-family: Georgia, serif; font-size: 3rem; color: #0c1a2e; margin-bottom: 16px;">404</h1>
+  <p style="margin-bottom: 32px; color: #6b6560;">The page you're looking for doesn't exist.</p>
+  <a href="{{ routes.root_url }}" class="ysa-btn ysa-btn-dark" style="display: inline-block; padding: 16px 48px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; background: #0c1a2e; color: #fff; text-decoration: none;">Back to home</a>
+</div>
+
+{% schema %}
+{
+  "name": "404",
+  "tag": "section",
+  "class": "ysa-main-404",
+  "settings": []
+}
+{% endschema %}

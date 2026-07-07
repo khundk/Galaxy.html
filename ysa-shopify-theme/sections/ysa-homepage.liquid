@@ -1,0 +1,359 @@
+{% comment %}
+  YSA Homepage Section — Shopify 2.0 Theme Section
+  Install: Copy to sections/ysa-homepage.liquid in your theme
+  Use: Online Store → Themes → Customize → Add section → YSA Homepage
+{% endcomment %}
+
+{{ 'ysa-homepage.css' | asset_url | stylesheet_tag }}
+
+<div class="ysa-page">
+
+  <div class="ysa-announce">
+    {{ section.settings.announcement_text }}
+  </div>
+
+  <header class="ysa-header" id="ysaHeader">
+    <div class="ysa-header-inner">
+      <nav class="ysa-nav-left">
+        {% for link in linklists[section.settings.menu].links limit: 3 %}
+          <a href="{{ link.url }}" class="ysa-nav-link">{{ link.title }}</a>
+        {% endfor %}
+      </nav>
+
+      <a href="{{ routes.root_url }}" class="ysa-logo">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 96 }}" alt="{{ shop.name }}" class="ysa-logo-mark" width="48" height="48">
+        {% else %}
+          <svg class="ysa-logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" fill="#0c1a2e"/>
+            <text x="24" y="30" text-anchor="middle" fill="#f7f3eb" font-family="Georgia, serif" font-size="16" font-weight="600" letter-spacing="2">YSA</text>
+            <line x1="8" y1="38" x2="40" y2="38" stroke="#b8956c" stroke-width="1"/>
+          </svg>
+        {% endif %}
+        <span class="ysa-logo-text">{{ section.settings.brand_name | default: 'YSA' }}</span>
+        <span class="ysa-logo-tagline">{{ section.settings.tagline }}</span>
+      </a>
+
+      <div class="ysa-nav-right">
+        <a href="{{ routes.collections_url }}" class="ysa-nav-link">Shop</a>
+        <a href="{{ pages.about.url | default: '/pages/about' }}" class="ysa-nav-link">Our Story</a>
+        <a href="{{ routes.search_url }}" class="ysa-icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+        </a>
+        <a href="{{ routes.account_url }}" class="ysa-icon-btn" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </a>
+        <a href="{{ routes.cart_url }}" class="ysa-icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+        </a>
+        <button class="ysa-mobile-toggle" id="ysaMenuOpen" aria-label="Open menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="ysa-mobile-menu" id="ysaMobileMenu">
+    <div class="ysa-mobile-menu-header">
+      <span class="ysa-logo-text" style="font-family: var(--ysa-serif); font-size: 24px; color: var(--ysa-navy);">{{ section.settings.brand_name | default: 'YSA' }}</span>
+      <button class="ysa-icon-btn" id="ysaMenuClose" aria-label="Close menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <nav class="ysa-mobile-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+      <a href="{{ routes.cart_url }}">Cart</a>
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="ysa-hero">
+    <div class="ysa-hero-bg" {% if section.settings.hero_image %}style="background-image: linear-gradient(135deg, rgba(12,26,46,0.55) 0%, rgba(12,26,46,0.25) 50%, rgba(107,28,46,0.35) 100%), url('{{ section.settings.hero_image | image_url: width: 1920 }}');"{% endif %}></div>
+    <div class="ysa-hero-content">
+      <p class="ysa-hero-eyebrow">{{ section.settings.hero_eyebrow }}</p>
+      <h1 class="ysa-hero-title">{{ section.settings.hero_title }}</h1>
+      <p class="ysa-hero-sub">{{ section.settings.hero_subtitle }}</p>
+      <div class="ysa-hero-btns">
+        {% if section.settings.hero_btn_text != blank %}
+          <a href="{{ section.settings.hero_btn_link }}" class="ysa-btn ysa-btn-primary">{{ section.settings.hero_btn_text }}</a>
+        {% endif %}
+        {% if section.settings.hero_btn2_text != blank %}
+          <a href="{{ section.settings.hero_btn2_link }}" class="ysa-btn ysa-btn-outline">{{ section.settings.hero_btn2_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Collections -->
+  <section class="ysa-section">
+    <div class="ysa-section-header">
+      <p class="ysa-section-eyebrow">Curated For You</p>
+      <h2 class="ysa-section-title">Shop by Category</h2>
+      <div class="ysa-section-divider"></div>
+    </div>
+    <div class="ysa-collections">
+      {% for block in section.blocks %}
+        {% if block.type == 'collection' %}
+          <a href="{{ block.settings.collection.url | default: '#' }}" class="ysa-collection-card" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title }}" loading="lazy" width="800" height="1067">
+            {% elsif block.settings.collection.featured_image %}
+              <img src="{{ block.settings.collection.featured_image | image_url: width: 800 }}" alt="{{ block.settings.collection.title }}" loading="lazy" width="800" height="1067">
+            {% endif %}
+            <div class="ysa-collection-overlay">
+              <h3 class="ysa-collection-name">{{ block.settings.title | default: block.settings.collection.title }}</h3>
+              <span class="ysa-collection-cta">Shop Now →</span>
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  {% if section.settings.featured_collection != blank %}
+    <section class="ysa-section" style="padding-top: 0;">
+      <div class="ysa-section-header">
+        <p class="ysa-section-eyebrow">Bestsellers</p>
+        <h2 class="ysa-section-title">Featured Pieces</h2>
+        <div class="ysa-section-divider"></div>
+      </div>
+      <div class="ysa-products">
+        {% for product in collections[section.settings.featured_collection].products limit: section.settings.products_count %}
+          <a href="{{ product.url }}" class="ysa-product-card">
+            <div class="ysa-product-image-wrap">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}" loading="lazy" width="600" height="800">
+              {% endif %}
+              {% if product.compare_at_price > product.price %}
+                <span class="ysa-product-badge">Sale</span>
+              {% elsif product.tags contains 'new' %}
+                <span class="ysa-product-badge">New</span>
+              {% endif %}
+              <div class="ysa-product-quick-add">View Product</div>
+            </div>
+            <p class="ysa-product-category">{{ product.type }}</p>
+            <h3 class="ysa-product-name">{{ product.title }}</h3>
+            <p class="ysa-product-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="ysa-sale">{{ product.price | money }}</span>
+                <span class="ysa-compare">{{ product.compare_at_price | money }}</span>
+              {% else %}
+                {{ product.price | money }}
+              {% endif %}
+            </p>
+          </a>
+        {% endfor %}
+      </div>
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="{{ collections[section.settings.featured_collection].url }}" class="ysa-btn ysa-btn-dark">View All Products</a>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Brand Story -->
+  <section class="ysa-story">
+    <div class="ysa-story-inner">
+      <div class="ysa-story-image">
+        {% if section.settings.story_image != blank %}
+          <img src="{{ section.settings.story_image | image_url: width: 800 }}" alt="YSA Story" loading="lazy" width="800" height="1000">
+        {% endif %}
+      </div>
+      <div>
+        <p class="ysa-story-eyebrow">The YSA Story</p>
+        <h2 class="ysa-story-title">{{ section.settings.story_title }}</h2>
+        <p class="ysa-story-text">{{ section.settings.story_text }}</p>
+        <p class="ysa-story-signature">— YSA</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="ysa-newsletter">
+    <div class="ysa-newsletter-inner">
+      <h2 class="ysa-newsletter-title">Join the YSA Circle</h2>
+      <p class="ysa-newsletter-sub">Be the first to know about new collections, exclusive offers, and style inspiration.</p>
+      {% form 'customer', class: 'ysa-newsletter-form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" name="contact[email]" class="ysa-newsletter-input" placeholder="Your email address" required>
+        <button type="submit" class="ysa-newsletter-btn">Subscribe</button>
+      {% endform %}
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function() {
+    var header = document.getElementById('ysaHeader');
+    var menuOpen = document.getElementById('ysaMenuOpen');
+    var menuClose = document.getElementById('ysaMenuClose');
+    var mobileMenu = document.getElementById('ysaMobileMenu');
+    if (header) window.addEventListener('scroll', function() { header.classList.toggle('scrolled', window.scrollY > 10); });
+    if (menuOpen && mobileMenu) menuOpen.addEventListener('click', function() { mobileMenu.classList.add('open'); });
+    if (menuClose && mobileMenu) menuClose.addEventListener('click', function() { mobileMenu.classList.remove('open'); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "YSA Homepage",
+  "tag": "section",
+  "class": "ysa-homepage-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement bar text",
+      "default": "Complimentary shipping on orders over $150 · Spring Collection Now Available"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image (optional)"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "YSA"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Est. MMXXV"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero background image"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero eyebrow text",
+      "default": "Spring / Summer 2026"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Timeless Style, Refined Living"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "Heritage craftsmanship meets modern elegance. Discover the new YSA collection."
+    },
+    {
+      "type": "text",
+      "id": "hero_btn_text",
+      "label": "Primary button text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "hero_btn_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "hero_btn2_text",
+      "label": "Secondary button text",
+      "default": "Discover YSA"
+    },
+    {
+      "type": "url",
+      "id": "hero_btn2_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Featured collection"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Number of products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Brand Story"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Story title",
+      "default": "A Legacy of American Elegance"
+    },
+    {
+      "type": "textarea",
+      "id": "story_text",
+      "label": "Story text",
+      "default": "Founded on the belief that true style is timeless, YSA creates clothing that transcends seasons and trends."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom title (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "YSA Homepage",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}
