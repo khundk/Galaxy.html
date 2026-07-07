@@ -1,0 +1,40 @@
+{{ 'ysa-homepage.css' | asset_url | stylesheet_tag }}
+
+<div class="ysa-page" style="max-width: 900px; margin: 0 auto; padding: 48px 24px;">
+  <p style="margin-bottom: 24px;"><a href="{{ routes.root_url }}" style="color: #0c1a2e;">&larr; Continue shopping</a></p>
+  <h1 style="font-family: Georgia, serif; font-size: 2.5rem; color: #0c1a2e; margin-bottom: 32px;">Cart</h1>
+
+  {% if cart.item_count == 0 %}
+    <p style="margin-bottom: 24px;">Your cart is empty.</p>
+    <a href="{{ routes.all_products_collection_url }}" class="ysa-btn ysa-btn-dark" style="display: inline-block; padding: 16px 48px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; background: #0c1a2e; color: #fff; text-decoration: none;">Shop all</a>
+  {% else %}
+    <form action="{{ routes.cart_url }}" method="post">
+      {% for item in cart.items %}
+        <div style="display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid #e8e2d8;">
+          {% if item.image %}
+            {{ item.image | image_url: width: 160 | image_tag: width: 80, height: 100, style: 'object-fit: cover;' }}
+          {% endif %}
+          <div>
+            <p style="font-family: Georgia, serif; font-size: 1.125rem; color: #0c1a2e;">{{ item.product.title }}</p>
+            <p style="color: #6b6560; font-size: 0.875rem;">Qty: {{ item.quantity }}</p>
+          </div>
+          <p>{{ item.final_line_price | money }}</p>
+        </div>
+      {% endfor %}
+
+      <div style="text-align: right; margin-top: 32px;">
+        <p style="font-size: 1.25rem; margin-bottom: 24px;"><strong>Total: {{ cart.total_price | money }}</strong></p>
+        <button type="submit" name="checkout" class="ysa-btn ysa-btn-dark" style="display: inline-block; padding: 16px 48px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; background: #0c1a2e; color: #fff; border: none; cursor: pointer;">Checkout</button>
+      </div>
+    </form>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "ysa-main-cart",
+  "settings": []
+}
+{% endschema %}

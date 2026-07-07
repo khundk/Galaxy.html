@@ -1,0 +1,16 @@
+{{ 'ysa-homepage.css' | asset_url | stylesheet_tag }}
+
+<div class="ysa-page" style="max-width: 900px; margin: 0 auto; padding: 48px 24px;">
+  <p style="margin-bottom: 24px;"><a href="{{ routes.root_url }}" style="color: #0c1a2e;">&larr; Back to store</a></p>
+  <h1 style="font-family: Georgia, serif; font-size: 2rem; color: #0c1a2e; margin-bottom: 24px;">{{ page.title }}</h1>
+  <div class="rte" style="line-height: 1.8;">{{ page.content }}</div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "ysa-main-page",
+  "settings": []
+}
+{% endschema %}
