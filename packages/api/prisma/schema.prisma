@@ -20,6 +20,8 @@ model Merchant {
   products      SourcedProduct[]
   orders        FulfillmentOrder[]
   walletTxns    WalletTransaction[]
+  warehouse         Warehouse?
+  automationSettings AutomationSettings?
 }
 
 model ShopifyShop {
@@ -75,7 +77,14 @@ model FulfillmentOrder {
   customerName      String
   customerEmail     String?
   shippingAddress   String   // JSON
-  status            String   @default("pending") // pending, sourcing, qc, packed, shipped, delivered, cancelled
+  status            String   @default("pending")
+  // Automation: pending → taobao_ordered → inbound_transit → at_warehouse → shipped → delivered
+  warehouseRef      String?  @unique
+  taobaoPurchaseIds String?  // JSON array of purchase order IDs
+  inboundTracking   String?
+  automationStatus  String   @default("idle") // idle, running, inbound, at_warehouse, shipped, failed
+  automationError   String?
+  outboundLabelUrl  String?
   subtotal          Float
   shippingCost      Float    @default(0)
   serviceFee        Float    @default(0)
@@ -125,6 +134,7 @@ model QCRecord {
 model Shipment {
   id              String   @id @default(uuid())
   orderId         String
+  direction       String   @default("outbound") // inbound (Taobao→Superbly), outbound (Superbly→customer)
   carrier         String
   service         String
   trackingNumber  String
@@ -192,4 +202,38 @@ model WalletTransaction {
   createdAt   DateTime @default(now())
 
   merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+}
+
+model Warehouse {
+  id          String   @id @default(uuid())
+  merchantId  String   @unique
+  name        String   @default("Superbly Warehouse")
+  contactName String
+  address1    String
+  address2    String?
+  city        String
+  province    String?
+  country     String
+  zip         String
+  phone       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+}
+
+model AutomationSettings {
+  id                   String   @id @default(uuid())
+  merchantId           String   @unique
+  autoPurchaseEnabled  Boolean  @default(true)
+  autoOutboundEnabled  Boolean  @default(true)
+  outboundCarrier      String   @default("demo") // demo, shipstation, shippo
+  defaultServiceCode   String?
+  shipstationApiKey    String?
+  shipstationApiSecret String?
+  shippoApiToken       String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  merchant             Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 }

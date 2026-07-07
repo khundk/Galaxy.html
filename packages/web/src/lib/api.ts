@@ -52,6 +52,25 @@ export const api = {
     request(`/orders/${orderId}/ship`, { method: 'POST', body: JSON.stringify({ routeId }) }),
   simulateTracking: (orderId: string) =>
     request(`/orders/${orderId}/tracking/simulate`, { method: 'POST' }),
+  simulateArrival: (orderId: string) =>
+    request<{ order: FulfillmentOrder; message: string }>(`/orders/${orderId}/simulate-arrival`, { method: 'POST' }),
+  retryAutomation: (orderId: string) =>
+    request(`/orders/${orderId}/retry-automation`, { method: 'POST' }),
+
+  getWarehouse: (merchantId: string) =>
+    request<{ warehouse: Warehouse | null }>(`/warehouse/${merchantId}`),
+  saveWarehouse: (merchantId: string, data: WarehouseInput) =>
+    request<{ warehouse: Warehouse }>(`/warehouse/${merchantId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  getAutomation: (merchantId: string) =>
+    request<{ settings: AutomationSettings | null }>(`/warehouse/${merchantId}/automation`),
+  saveAutomation: (merchantId: string, data: Partial<AutomationSettings>) =>
+    request<{ settings: AutomationSettings }>(`/warehouse/${merchantId}/automation`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 
   getShippingRoutes: () => request<{ routes: ShippingRoute[] }>('/shipping/routes'),
   getShippingQuote: (weight: number, country: string) =>
@@ -121,6 +140,11 @@ export interface FulfillmentOrder {
   customerEmail?: string;
   shippingAddress: string;
   status: string;
+  warehouseRef?: string;
+  inboundTracking?: string;
+  automationStatus?: string;
+  automationError?: string;
+  outboundLabelUrl?: string;
   subtotal: number;
   shippingCost: number;
   serviceFee: number;
@@ -146,6 +170,7 @@ export interface OrderItem {
 
 export interface Shipment {
   id: string;
+  direction?: string;
   carrier: string;
   service: string;
   trackingNumber: string;
@@ -211,4 +236,29 @@ export interface CreateOrderPayload {
     zip: string;
   };
   items: Array<{ productId: string; variantSku?: string; variantName?: string; quantity: number }>;
+}
+
+export interface Warehouse {
+  id: string;
+  name: string;
+  contactName: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  province?: string;
+  country: string;
+  zip: string;
+  phone?: string;
+}
+
+export type WarehouseInput = Omit<Warehouse, 'id'>;
+
+export interface AutomationSettings {
+  autoPurchaseEnabled: boolean;
+  autoOutboundEnabled: boolean;
+  outboundCarrier: 'demo' | 'shipstation' | 'shippo';
+  defaultServiceCode?: string;
+  shipstationApiKey?: string;
+  shipstationApiSecret?: string;
+  shippoApiToken?: string;
 }

@@ -10,6 +10,7 @@ import {
   recordQC,
   simulateTrackingProgress,
 } from '../services/shipping.js';
+import { startAutoFulfillment, simulateInboundArrival } from '../services/automation.js';
 
 export const orderRoutes = Router();
 
@@ -121,6 +122,11 @@ orderRoutes.post(
     });
 
     res.status(201).json({ order });
+
+    // Start automation for manual test orders too
+    startAutoFulfillment(order.id).catch((err) =>
+      console.error('[Automation] Failed to start manual order:', err)
+    );
   })
 );
 
@@ -178,6 +184,32 @@ orderRoutes.post(
     const body = z.object({ routeId: z.string() }).parse(req.body);
     const result = await createShipment(paramId(req.params.id), body.routeId);
     res.json(result);
+  })
+);
+
+orderRoutes.post(
+  '/:id/simulate-arrival',
+  asyncHandler(async (req, res) => {
+    const id = paramId(req.params.id);
+    await simulateInboundArrival(id);
+    const order = await prisma.fulfillmentOrder.findUnique({
+      where: { id },
+      include: {
+        shipments: { include: { trackingEvents: { orderBy: { occurredAt: 'desc' } } } },
+        statusHistory: { orderBy: { createdAt: 'desc' } },
+      },
+    });
+    res.json({ order, message: 'Package arrived at Superbly — outbound label auto-created for customer' });
+  })
+);
+
+orderRoutes.post(
+  '/:id/retry-automation',
+  asyncHandler(async (req, res) => {
+    const id = paramId(req.params.id);
+    await startAutoFulfillment(id);
+    const order = await prisma.fulfillmentOrder.findUnique({ where: { id } });
+    res.json({ order });
   })
 );
 

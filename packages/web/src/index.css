@@ -35,9 +35,13 @@ body {
 }
 
 .badge-pending { @apply bg-amber-500/20 text-amber-300; }
+.badge-taobao_ordered { @apply bg-orange-500/20 text-orange-300; }
+.badge-inbound_transit { @apply bg-blue-500/20 text-blue-300; }
+.badge-at_warehouse { @apply bg-purple-500/20 text-purple-300; }
 .badge-sourcing { @apply bg-blue-500/20 text-blue-300; }
 .badge-qc { @apply bg-purple-500/20 text-purple-300; }
 .badge-packed { @apply bg-cyan-500/20 text-cyan-300; }
 .badge-shipped { @apply bg-indigo-500/20 text-indigo-300; }
 .badge-delivered { @apply bg-emerald-500/20 text-emerald-300; }
 .badge-cancelled { @apply bg-red-500/20 text-red-300; }
+.badge-failed { @apply bg-red-500/20 text-red-300; }

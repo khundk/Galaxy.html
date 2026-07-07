@@ -214,12 +214,55 @@ export async function processShopifyOrderWebhook(
         create: orderItems,
       },
       statusHistory: {
-        create: { status: 'pending', note: 'Order received from Shopify' },
+        create: { status: 'pending', note: 'Order received from Shopify — automation starting' },
       },
     },
   });
 
+  // Fire-and-forget auto-fulfillment (Taobao buy → Superbly → customer)
+  import('./automation.js')
+    .then(({ startAutoFulfillment }) => startAutoFulfillment(order.id))
+    .catch((err) => console.error('[Automation] Failed to start:', err));
+
   return order.id;
+}
+
+export async function pushFulfillmentToShopify(
+  shopDomain: string,
+  accessToken: string,
+  shopifyOrderId: string,
+  trackingNumber: string,
+  carrier: string
+): Promise<void> {
+  if (!accessToken || accessToken.startsWith('demo_') || !shopifyOrderId) {
+    console.log(`[Shopify] Demo fulfillment push: ${trackingNumber} via ${carrier}`);
+    return;
+  }
+
+  const fulfillment = {
+    fulfillment: {
+      location_id: null,
+      tracking_number: trackingNumber,
+      tracking_company: carrier,
+      notify_customer: true,
+    },
+  };
+
+  const response = await fetch(
+    `https://${shopDomain}/admin/api/2024-10/orders/${shopifyOrderId}/fulfillments.json`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': accessToken,
+      },
+      body: JSON.stringify(fulfillment),
+    }
+  );
+
+  if (!response.ok) {
+    console.error(`[Shopify] Fulfillment push failed: ${await response.text()}`);
+  }
 }
 
 interface ShopifyOrderPayload {

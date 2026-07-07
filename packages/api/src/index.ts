@@ -6,6 +6,7 @@ import { shopifyRoutes } from './routes/shopify.js';
 import { orderRoutes } from './routes/orders.js';
 import { shippingRoutes } from './routes/shipping.js';
 import { merchantRoutes } from './routes/merchants.js';
+import { warehouseRoutes } from './routes/warehouse.js';
 import { errorHandler } from './lib/errors.js';
 import { config } from './lib/config.js';
 
@@ -23,6 +24,7 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+app.use('/api/warehouse', warehouseRoutes);
 app.use('/api/merchants', merchantRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/shopify', shopifyRoutes);

@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma.js';
 import { AppError } from '../lib/errors.js';
-import { purchaseFromTaobao } from './taobao.js';
+import { purchaseFromTaobaoLegacy } from './taobao.js';
 
 export interface ShippingQuote {
   routeId: string;
@@ -165,7 +165,7 @@ export async function advanceOrderPipeline(orderId: string): Promise<string> {
     case 'pending': {
       // Source products from Taobao
       for (const item of order.items) {
-        await purchaseFromTaobao(
+        await purchaseFromTaobaoLegacy(
           item.product.taobaoItemId,
           item.variantSku || '',
           item.quantity

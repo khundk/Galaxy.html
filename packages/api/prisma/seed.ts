@@ -59,6 +59,33 @@ async function main() {
     },
   });
 
+  await prisma.warehouse.upsert({
+    where: { merchantId: merchant.id },
+    create: {
+      merchantId: merchant.id,
+      name: 'Superbly Warehouse',
+      contactName: 'Receiving Dept',
+      address1: '123 Superbly Way',
+      city: 'Los Angeles',
+      province: 'CA',
+      country: 'US',
+      zip: '90001',
+      phone: '+1-555-0100',
+    },
+    update: {},
+  });
+
+  await prisma.automationSettings.upsert({
+    where: { merchantId: merchant.id },
+    create: {
+      merchantId: merchant.id,
+      autoPurchaseEnabled: true,
+      autoOutboundEnabled: true,
+      outboundCarrier: 'demo',
+    },
+    update: {},
+  });
+
   console.log('Seed complete!');
   console.log(`Demo merchant ID: ${merchant.id}`);
   console.log(`Demo shop ID: ${shop?.id}`);

@@ -143,18 +143,74 @@ export async function searchTaobaoProducts(query: string): Promise<TaobaoProduct
   );
 }
 
-export async function purchaseFromTaobao(
+export interface TaobaoPurchaseResult {
+  success: boolean;
+  purchaseOrderId: string;
+  estimatedArrival: Date;
+  inboundTracking: string;
+}
+
+export async function purchaseFromTaobao(params: {
+  itemId: string;
+  variantSku: string;
+  quantity: number;
+  shipTo: {
+    name: string;
+    contactName: string;
+    address1: string;
+    address2?: string;
+    city: string;
+    province?: string;
+    country: string;
+    zip: string;
+    phone?: string;
+  };
+  orderRef: string;
+  buyerNote: string;
+}): Promise<TaobaoPurchaseResult> {
+  // In production: call Taobao Open Platform buy API or procurement agent API
+  // shipTo = Superbly warehouse address (NOT customer address)
+  // buyerNote = warehouse ref for package matching at Superbly
+  console.log(`[Taobao] Purchasing ${params.itemId} x${params.quantity}`);
+  console.log(`[Taobao] Ship to: ${params.shipTo.name}, ${params.shipTo.address1}, ${params.shipTo.city}`);
+  console.log(`[Taobao] Ref: ${params.orderRef} | Note: ${params.buyerNote}`);
+
+  const arrival = new Date();
+  arrival.setDate(arrival.getDate() + 2 + Math.floor(Math.random() * 2));
+
+  return {
+    success: true,
+    purchaseOrderId: `TB-${params.orderRef}-${Date.now()}`,
+    estimatedArrival: arrival,
+    inboundTracking: `CN${Date.now()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
+  };
+}
+
+// Legacy signature for manual pipeline
+export async function purchaseFromTaobaoLegacy(
   itemId: string,
   variantSku: string,
   quantity: number
 ): Promise<{ success: boolean; purchaseOrderId: string; estimatedArrival: Date }> {
-  // In production: call Taobao purchasing API or manual procurement system
-  const arrival = new Date();
-  arrival.setDate(arrival.getDate() + 2 + Math.floor(Math.random() * 2));
+  const result = await purchaseFromTaobao({
+    itemId,
+    variantSku,
+    quantity,
+    shipTo: {
+      name: 'Warehouse',
+      contactName: 'Receiving',
+      address1: 'Default Warehouse',
+      city: 'Guangzhou',
+      country: 'CN',
+      zip: '510000',
+    },
+    orderRef: 'LEGACY',
+    buyerNote: 'Legacy purchase',
+  });
   return {
-    success: true,
-    purchaseOrderId: `PO-${Date.now()}`,
-    estimatedArrival: arrival,
+    success: result.success,
+    purchaseOrderId: result.purchaseOrderId,
+    estimatedArrival: result.estimatedArrival,
   };
 }
 
