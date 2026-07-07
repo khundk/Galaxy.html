@@ -6,26 +6,45 @@
   }
 
   .ysa-page {
-    --ysa-navy: #0c1a2e;
-    --ysa-navy-light: #1a2f4a;
-    --ysa-burgundy: #6b1c2e;
-    --ysa-cream: #f7f3eb;
-    --ysa-ivory: #faf8f4;
-    --ysa-gold: #b8956c;
-    --ysa-gold-light: #d4b896;
-    --ysa-charcoal: #2c2c2c;
-    --ysa-muted: #6b6560;
-    --ysa-border: #e8e2d8;
-    --ysa-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-    --ysa-sans: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ysa-navy: #1c2430;
+    --ysa-navy-light: #2e3a4a;
+    --ysa-burgundy: #5a1f2e;
+    --ysa-cream: #f0e8d8;
+    --ysa-parchment: #ebe3d3;
+    --ysa-ivory: #f7f2e8;
+    --ysa-gold: #8f7349;
+    --ysa-gold-light: #b89a6a;
+    --ysa-charcoal: #3a342c;
+    --ysa-muted: #7a6f62;
+    --ysa-border: #d4c9b5;
+    --ysa-serif: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+    --ysa-serif-display: 'Cormorant Garamond', Georgia, serif;
+    --ysa-sans: 'Libre Baskerville', Georgia, serif;
     font-family: var(--ysa-sans);
     color: var(--ysa-charcoal);
     background: var(--ysa-ivory);
-    line-height: 1.6;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    position: relative;
   }
 
-  .ysa-page img { display: block; max-width: 100%; height: auto; }
+  .ysa-page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .ysa-page img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    filter: sepia(0.12) contrast(1.02) saturate(0.92);
+  }
+
   .ysa-page a { color: inherit; text-decoration: none; }
   .ysa-page button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
@@ -34,11 +53,12 @@
     background: var(--ysa-navy);
     color: var(--ysa-cream);
     text-align: center;
-    padding: 10px 20px;
-    font-size: 11px;
-    letter-spacing: 0.18em;
+    padding: 11px 20px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     font-weight: 400;
+    border-bottom: 1px solid rgba(184, 154, 106, 0.25);
   }
 
   /* ── Header ── */
@@ -46,9 +66,10 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--ysa-ivory);
+    background: rgba(247, 242, 232, 0.96);
     border-bottom: 1px solid var(--ysa-border);
     transition: box-shadow 0.3s ease;
+    backdrop-filter: blur(6px);
   }
 
   .ysa-header.scrolled {
@@ -110,12 +131,13 @@
   }
 
   .ysa-logo-text {
-    font-family: var(--ysa-serif);
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 0.35em;
+    font-family: var(--ysa-serif-display);
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: 0.42em;
     color: var(--ysa-navy);
     line-height: 1;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
   }
 
   .ysa-logo-tagline {
@@ -155,8 +177,15 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(135deg, rgba(12, 26, 46, 0.55) 0%, rgba(12, 26, 46, 0.25) 50%, rgba(107, 28, 46, 0.35) 100%),
-      url('https://images.unsplash.com/photo-1441984904996-e0b49598b7a3?w=1920&q=80') center/cover no-repeat;
+      linear-gradient(160deg, rgba(28, 36, 48, 0.72) 0%, rgba(58, 52, 44, 0.45) 45%, rgba(90, 31, 46, 0.5) 100%),
+      url('https://images.unsplash.com/photo-1558171813-4c088754af8f?w=1920&q=80') center/cover no-repeat;
+  }
+
+  .ysa-hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(20, 16, 10, 0.35) 100%);
   }
 
   .ysa-hero-content {
@@ -178,12 +207,13 @@
   }
 
   .ysa-hero-title {
-    font-family: var(--ysa-serif);
-    font-size: clamp(48px, 7vw, 88px);
+    font-family: var(--ysa-serif-display);
+    font-size: clamp(48px, 7vw, 92px);
     font-weight: 400;
-    line-height: 1.05;
+    line-height: 1.02;
     margin-bottom: 24px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.25);
   }
 
   .ysa-hero-title em {
@@ -274,11 +304,128 @@
   }
 
   .ysa-section-title {
-    font-family: var(--ysa-serif);
-    font-size: clamp(32px, 4vw, 48px);
+    font-family: var(--ysa-serif-display);
+    font-size: clamp(34px, 4vw, 52px);
     font-weight: 400;
     color: var(--ysa-navy);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
+    font-style: italic;
+  }
+
+  .ysa-section-intro {
+    max-width: 640px;
+    margin: -32px auto 48px;
+    text-align: center;
+    font-family: var(--ysa-serif);
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--ysa-muted);
+    font-style: italic;
+  }
+
+  .ysa-ornament {
+    text-align: center;
+    color: var(--ysa-gold);
+    font-size: 14px;
+    letter-spacing: 0.6em;
+    margin: 12px 0 0;
+  }
+
+  /* ── Heritage Banner ── */
+  .ysa-heritage {
+    background: var(--ysa-parchment);
+    border-top: 1px solid var(--ysa-border);
+    border-bottom: 1px solid var(--ysa-border);
+    padding: 56px 32px;
+    text-align: center;
+    position: relative;
+  }
+
+  .ysa-heritage-inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .ysa-heritage-stamp {
+    display: inline-block;
+    border: 1px solid var(--ysa-gold);
+    color: var(--ysa-gold);
+    padding: 8px 20px;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+
+  .ysa-heritage-quote {
+    font-family: var(--ysa-serif-display);
+    font-size: clamp(26px, 3.5vw, 38px);
+    line-height: 1.35;
+    color: var(--ysa-navy);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .ysa-heritage-attribution {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ysa-muted);
+  }
+
+  /* ── Journal / Editorial ── */
+  .ysa-journal {
+    background: var(--ysa-ivory);
+    padding: 80px 32px;
+    border-bottom: 1px solid var(--ysa-border);
+  }
+
+  .ysa-journal-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ysa-journal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 48px;
+  }
+
+  .ysa-journal-card {
+    border: 1px solid var(--ysa-border);
+    background: var(--ysa-cream);
+    padding: 32px 28px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .ysa-journal-card:hover {
+    border-color: var(--ysa-gold);
+    box-shadow: 0 8px 32px rgba(58, 52, 44, 0.08);
+  }
+
+  .ysa-journal-date {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ysa-gold);
+    margin-bottom: 16px;
+  }
+
+  .ysa-journal-title {
+    font-family: var(--ysa-serif-display);
+    font-size: 24px;
+    color: var(--ysa-navy);
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  .ysa-journal-text {
+    font-family: var(--ysa-serif);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ysa-muted);
   }
 
   .ysa-section-divider {
@@ -300,6 +447,7 @@
     aspect-ratio: 3/4;
     overflow: hidden;
     cursor: pointer;
+    border: 1px solid var(--ysa-border);
   }
 
   .ysa-collection-card img {
@@ -358,6 +506,7 @@
     overflow: hidden;
     background: var(--ysa-cream);
     margin-bottom: 16px;
+    border: 1px solid var(--ysa-border);
   }
 
   .ysa-product-image-wrap img {
@@ -511,8 +660,8 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to right, rgba(12, 26, 46, 0.8) 0%, rgba(12, 26, 46, 0.3) 100%),
-      url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920&q=80') center/cover no-repeat;
+      linear-gradient(to right, rgba(28, 36, 48, 0.85) 0%, rgba(58, 52, 44, 0.4) 100%),
+      url('https://images.unsplash.com/photo-1490114538077-0a7f8ffc4982?w=1920&q=80') center/cover no-repeat;
   }
 
   .ysa-lifestyle-content {
@@ -811,12 +960,4 @@
     .ysa-newsletter-input { border-right: 1px solid var(--ysa-border); }
     .ysa-footer-grid { grid-template-columns: 1fr; gap: 32px; }
     .ysa-lifestyle { height: 50vh; }
-  }
-</style>
-
-<div class="ysa-page">
-
-  <!-- Announcement -->
-  <div class="ysa-announce">
-    Complimentary shipping on orders over $150 &nbsp;·&nbsp; Spring Collection Now Available
-  </div>
+    .ysa-journal-grid { grid-template-columns: 1fr; gap: 24px; }
